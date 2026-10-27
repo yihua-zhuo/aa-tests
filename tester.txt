@@ -1,0 +1,849 @@
+下面是与上一份 UI 设计需求配套的功能需求文档（Functional Requirements Document），重点描述每个模块需要实现什么功能、用户如何操作、数据如何展示，以及功能验收标准。可以直接交给 AI 编程 Agent 进行开发。
+
+# Clay Dashboard — Functional Requirements Document
+
+**Version:** 1.0\
+**Product Type:** SaaS Analytics Dashboard\
+**Document Type:** Functional Requirements Specification
+
+## 1. Product Overview
+
+### 1.1 Objective
+
+Build a responsive SaaS dashboard that enables users to monitor business performance, analyze revenue trends, track customer acquisition, manage projects, and review recent activities.
+
+The application should provide a consistent experience across desktop, tablet, and mobile devices.
+
+### 1.2 Target Users
+
+- **Administrator:** Manages users, projects, settings, and overall dashboard access.
+- **Business Manager:** Reviews KPIs, revenue trends, customer acquisition, and project progress.
+- **Project Manager:** Creates and manages projects, updates progress, and monitors project status.
+- **General User:** Views authorized analytics and project information.
+
+Roles and permissions should be configurable rather than hardcoded into individual UI components.
+
+### 1.3 Core Functional Modules
+
+1. Authentication and access control
+2. Main dashboard and KPI metrics
+3. Analytics and reporting
+4. Project management
+5. User management
+6. Recent activity and notifications
+7. Search and filtering
+8. Account settings
+9. Responsive navigation
+10. Upgrade plan and subscription UI
+
+---
+
+## 2. Authentication and Access Control
+
+### 2.1 Authentication
+
+The application must support an authenticated user session.
+
+Functional requirements:
+
+- Provide login and logout functionality.
+- Support integration with an external authentication provider.
+- Restore valid sessions when the user returns.
+- Redirect unauthenticated users to the login page.
+- Handle expired sessions and authentication failures gracefully.
+- Protect application routes and API endpoints.
+
+The authentication provider and login methods should be selected according to the deployment environment.
+
+### 2.2 User Profile
+
+The user menu should display:
+
+- Profile avatar
+- Display name
+- Role or account type
+- Account settings entry
+- Logout action
+
+Users should be able to update permitted profile information.
+
+### 2.3 Role-Based Access Control
+
+Suggested permission model:
+
+| Capability             | Administrator | Business Manager | Project Manager   | General User    |
+| ---------------------- | ------------- | ---------------- | ----------------- | --------------- |
+| View dashboard         | Yes           | Yes              | Yes               | Authorized data |
+| View analytics         | Yes           | Yes              | Optional          | Optional        |
+| Manage projects        | Yes           | View/manage      | Assigned projects | View assigned   |
+| Manage users           | Yes           | No               | No                | No              |
+| Modify system settings | Yes           | No               | No                | No              |
+| View activity feed     | Yes           | Yes              | Yes               | Authorized data |
+
+The final permissions must be configurable. Backend APIs must enforce permissions independently of frontend visibility.
+
+---
+
+## 3. Main Dashboard
+
+### 3.1 Dashboard Overview
+
+The Overview page is the default landing page after successful authentication.
+
+It should contain:
+
+- Total Revenue KPI
+- New Customers KPI
+- Conversion Rate KPI
+- Revenue Overview chart
+- Top Channels chart
+- Recent Activities list
+- Projects Overview
+- Global date-range selector, if supported
+
+The dashboard should load its data from APIs rather than rely on hardcoded presentation values.
+
+### 3.2 KPI Metrics
+
+Each KPI card should support:
+
+- Displaying the metric name and current value.
+- Showing the percentage change compared with a previous period.
+- Displaying a small trend chart.
+- Showing the comparison period.
+- Loading, error, and empty states.
+- Refreshing when the selected time range changes.
+
+Required initial metrics:
+
+| Metric          | Description                                     | Example |
+| --------------- | ----------------------------------------------- | ------- |
+| Total Revenue   | Total revenue during the selected period        | $24,780 |
+| New Customers   | Number of newly acquired customers              | 1,248   |
+| Conversion Rate | Percentage of qualifying visitors who converted | 3.86%   |
+
+Calculation requirements:
+
+- Revenue must follow the configured currency and reporting timezone.
+- Customer counts must use a clearly defined customer creation or acquisition event.
+- Conversion rate must define its numerator, denominator, and attribution period.
+- Percentage change should compare equivalent periods.
+- If the previous period is zero or unavailable, display an appropriate unavailable state instead of an invalid percentage.
+- Values must follow consistent rounding and number formatting rules.
+
+### 3.3 Dashboard Date Range
+
+Provide a date-range selector with options such as:
+
+- Today
+- Last 7 days
+- Last 30 days
+- This month
+- Previous month
+- Custom range
+
+When the date range changes:
+
+1. Validate the selected range.
+2. Fetch the relevant KPI and chart data.
+3. Update all date-dependent widgets.
+4. Display loading feedback while fetching data.
+5. Preserve the selected range during navigation where appropriate.
+
+The application must distinguish between the global reporting range and any widget-specific time range.
+
+### 3.4 Dashboard Refresh
+
+- Provide manual refresh functionality.
+- Optionally support automatic refresh with a configurable interval.
+- Prevent overlapping requests when a previous refresh is still running.
+- Show the last successful update time.
+- Retain existing data and display a warning if refresh fails, where practical.
+
+---
+
+## 4. Analytics and Reporting
+
+### 4.1 Analytics Page
+
+The Analytics page should provide a more detailed view of business performance.
+
+Suggested tabs:
+
+- Overview
+- Sales
+- Users
+- Projects
+
+Each tab should display the metrics and charts relevant to its category.
+
+### 4.2 Revenue Overview
+
+Functional requirements:
+
+- Display revenue over time using a line chart.
+- Support daily, weekly, or monthly aggregation.
+- Support date-range filtering.
+- Show exact values in tooltips.
+- Display axis labels and currency units.
+- Handle missing dates and incomplete data correctly.
+- Allow users to compare periods if comparison mode is enabled.
+
+The chart must use real data or an explicitly identified demo dataset.
+
+### 4.3 Top Channels
+
+Display channel contribution using a donut chart.
+
+Example channels:
+
+- Organic Search
+- Direct
+- Social Media
+- Email
+
+Each channel should show:
+
+- Channel name
+- Absolute value, if available
+- Percentage contribution
+- Corresponding chart color
+
+The percentage calculation must use the same denominator across all channels. The legend and chart must update together when filtering is applied.
+
+### 4.4 User Performance
+
+Suggested metrics:
+
+- Total users
+- New users
+- Active users
+- User growth rate
+- Retention rate, if supported
+
+Each metric must have a documented definition and time window.
+
+### 4.5 Sales Performance
+
+Suggested metrics:
+
+- Total sales
+- Revenue
+- Average order value
+- Conversion rate
+- Sales growth
+
+If the application does not have an order or payment data source, these metrics must remain unavailable or use clearly labeled demo data.
+
+### 4.6 Reporting
+
+Users with the required permissions should be able to:
+
+- Select a reporting period.
+- Filter available data.
+- Review charts and summary metrics.
+- Export supported reports to CSV.
+- See the selected reporting period and export timestamp.
+
+Large exports should be processed asynchronously if synchronous API responses would be too expensive or slow.
+
+PDF exports are optional and should be implemented only if required by the product scope.
+
+---
+
+## 5. Project Management
+
+### 5.1 Project List
+
+The Projects page should display projects in a card or list layout.
+
+Each project should contain:
+
+- Project name
+- Project description
+- Project status
+- Progress percentage
+- Project owner
+- Creation or update timestamp
+- Optional due date
+
+Suggested statuses:
+
+- Planning
+- In Progress
+- Review
+- Completed
+- Archived
+
+### 5.2 Project Filtering
+
+Users should be able to filter projects by:
+
+- All
+- Active
+- Completed
+- Archived
+
+Additional filters may include owner, status, and search keyword.
+
+Filtering should not modify project data.
+
+### 5.3 Project Creation
+
+Authorized users should be able to create a project.
+
+Required fields:
+
+- Project name
+- Project owner, subject to permissions
+
+Optional fields:
+
+- Description
+- Due date
+- Initial status
+- Initial progress
+
+Validation rules:
+
+- Project name cannot be empty.
+- Progress must be between 0 and 100.
+- Due date must follow the application's date rules.
+- Invalid submissions must display actionable validation messages.
+
+### 5.4 Project Details and Updates
+
+Users with sufficient permissions should be able to:
+
+- Open a project details page.
+- Edit project information.
+- Update project status.
+- Update project progress.
+- View project activity.
+- Archive or restore a project where permitted.
+
+The application should record who made a change and when it occurred.
+
+### 5.5 Progress Management
+
+- Display progress as a percentage and progress bar.
+- Keep displayed progress consistent with stored data.
+- Apply the configured completion rules when a project reaches 100%.
+- Do not automatically mark a project completed unless this behavior is explicitly configured.
+
+---
+
+## 6. Projects Overview Widget
+
+The dashboard widget summarizes project status across the authorized project dataset.
+
+Required information:
+
+- Total projects
+- Completed projects
+- In-progress projects
+- Pending or planning projects
+
+Requirements:
+
+- Counts must be calculated from the same dataset and reporting scope.
+- Status categories must not overlap when calculating totals.
+- The total must reconcile with the status breakdown.
+- Clicking a status should navigate to the Projects page with the corresponding filter applied.
+- Loading, error, and empty states must be supported.
+
+Example:
+
+- Total Projects: 128
+- Completed: 86
+- In Progress: 32
+- Pending: 10
+
+These values are illustrative and should be generated from actual project records in production.
+
+---
+
+## 7. Recent Activities
+
+### 7.1 Activity Feed
+
+Display recent business and project events, such as:
+
+- Project created
+- User registered
+- Payment received
+- Project completed
+- Project status changed
+- Project information updated
+
+Each activity should include:
+
+- Event type
+- Event description
+- Event timestamp
+- Optional actor or related entity
+
+### 7.2 Activity Behavior
+
+- Sort activities by event time, newest first.
+- Use consistent timezone formatting.
+- Support pagination or incremental loading.
+- Allow authorized users to open the associated project or record.
+- Display a clear empty state when no activities exist.
+
+### 7.3 Activity Data Integrity
+
+Activity records should be created from actual business operations or trusted event sources.
+
+The system must not generate fake activity entries merely to populate the UI.
+
+For critical business events, event creation should be durable and should not depend exclusively on a successful frontend request.
+
+---
+
+## 8. User Management
+
+### 8.1 User List
+
+Administrators should be able to view authorized user records.
+
+Suggested fields:
+
+- Display name
+- Email
+- Role
+- Account status
+- Registration date
+- Last activity, if available
+
+### 8.2 User Operations
+
+Depending on permissions, administrators may:
+
+- Invite users
+- Edit permitted profile information
+- Assign roles
+- Suspend or reactivate accounts
+- Review user details
+
+The application must prevent unauthorized privilege escalation.
+
+### 8.3 User Search and Filtering
+
+Support search by name or email and filtering by role or account status.
+
+User management must use server-side authorization and pagination for large datasets.
+
+---
+
+## 9. Global Search
+
+The header search field should provide a unified search entry point.
+
+Suggested searchable entities:
+
+- Projects
+- Users, subject to permission
+- Reports, if supported
+
+Requirements:
+
+- Accept search keywords.
+- Debounce requests to avoid unnecessary API calls.
+- Display loading, results, and no-results states.
+- Support keyboard navigation where practical.
+- Navigate to the selected record.
+- Apply authorization filters on the backend.
+
+The search scope should be explicit. It must not expose records the current user is not allowed to access.
+
+---
+
+## 10. Notifications
+
+Notifications are optional for the initial release but should be supported by the architecture if required.
+
+Potential notification types:
+
+- Project assignments
+- Project status changes
+- Project completion
+- Account invitations
+- Important system events
+
+If notifications are implemented, users should be able to:
+
+- Open the notification list.
+- View notification details.
+- Mark notifications as read.
+- Navigate to the related record.
+
+Read status must persist across sessions.
+
+Email, push, and real-time notifications are separate integrations and should not be assumed to exist merely because the UI includes a Messages menu.
+
+---
+
+## 11. Settings
+
+### 11.1 Profile Settings
+
+Allow users to manage permitted profile information, such as:
+
+- Display name
+- Avatar
+- Preferred timezone
+- Language, if supported
+
+### 11.2 Application Settings
+
+Administrators may configure:
+
+- Organization information
+- User roles and permissions
+- Reporting defaults
+- Available integrations
+- Feature availability
+
+Sensitive configuration changes should be validated, authorized, and audited.
+
+### 11.3 Preferences
+
+The application may support:
+
+- Default dashboard date range
+- Display preferences
+- Notification preferences
+- Theme preferences
+
+The initial release should prioritize functional requirements that directly support the core dashboard workflow.
+
+---
+
+## 12. Upgrade Plan and Subscription UI
+
+The screenshot includes an Upgrade Plan card.
+
+For the initial release, this component may be informational only.
+
+If subscription functionality is in scope, it should support:
+
+- Displaying the current plan.
+- Showing available plans and feature differences.
+- Redirecting users to a secure checkout or billing portal.
+- Displaying the current subscription status.
+- Handling successful and failed checkout flows.
+- Refreshing subscription state from a trusted backend source.
+
+Payment status must never be determined solely by frontend state.
+
+If billing integration is not configured, the Upgrade button should lead to a designated contact or information page rather than simulate a successful purchase.
+
+---
+
+## 13. Common UI States and Error Handling
+
+Every data-driven module should support the following states.
+
+### Loading
+
+- Display skeleton cards or loading indicators.
+- Avoid large layout shifts.
+- Prevent duplicate submissions where relevant.
+
+### Empty
+
+- Explain why no data is available.
+- Provide a useful next action when applicable.
+- Distinguish between genuinely empty data and missing permissions.
+
+### Error
+
+- Display a clear error message.
+- Offer retry where appropriate.
+- Preserve previously loaded data when safe.
+- Avoid exposing stack traces, credentials, or internal infrastructure details.
+
+### Partial Failure
+
+A failure in one dashboard widget must not prevent unrelated widgets from loading.
+
+For example, if the revenue API fails, the project overview and recent activity widgets should remain available.
+
+### API Timeout
+
+- Apply reasonable request timeouts.
+- Support cancellation of obsolete requests.
+- Avoid indefinite loading indicators.
+- Use controlled retry behavior to prevent request storms.
+
+---
+
+## 14. Responsive Navigation
+
+### Desktop
+
+- Display a persistent sidebar.
+- Use the header for search and account controls.
+- Show multiple dashboard cards in a grid.
+
+### Tablet
+
+- Reduce dashboard columns.
+- Allow the sidebar to collapse.
+- Preserve readable chart dimensions.
+
+### Mobile
+
+- Use compact navigation or a bottom navigation bar.
+- Stack dashboard widgets vertically.
+- Make charts and project cards touch-friendly.
+- Support vertical scrolling.
+- Avoid horizontal overflow.
+- Ensure all essential operations remain accessible.
+
+Responsive behavior must not change the underlying permissions or business logic.
+
+---
+
+## 15. Data Model — Suggested Initial Entities
+
+The following is a conceptual starting point. The final schema depends on the actual business domain.
+
+### User
+
+- id
+- display_name
+- email
+- avatar_url
+- role_id
+- status
+- created_at
+- updated_at
+
+### Project
+
+- id
+- name
+- description
+- owner_id
+- status
+- progress
+- due_date
+- created_at
+- updated_at
+
+### Activity
+
+- id
+- actor_id
+- event_type
+- entity_type
+- entity_id
+- description or structured payload
+- created_at
+
+### KPI / Analytics Data
+
+Analytics should generally be derived from the authoritative business data or a dedicated analytics pipeline rather than maintained as manually editable dashboard values.
+
+Depending on the reporting requirements, additional entities may include:
+
+- Revenue transactions
+- Customer records
+- Conversion events
+- Marketing channel attribution
+- Daily or monthly aggregate tables
+
+Use stable identifiers, appropriate indexes, and pagination for growing datasets.
+
+---
+
+## 16. API Requirements
+
+The frontend should communicate with a backend through documented APIs.
+
+Suggested endpoint structure:
+
+| Method | Endpoint                | Purpose                       |
+| ------ | ----------------------- | ----------------------------- |
+| GET    | /api/dashboard/summary  | Retrieve dashboard KPIs       |
+| GET    | /api/analytics/revenue  | Retrieve revenue time series  |
+| GET    | /api/analytics/channels | Retrieve channel distribution |
+| GET    | /api/analytics/users    | Retrieve user analytics       |
+| GET    | /api/projects           | List and filter projects      |
+| POST   | /api/projects           | Create a project              |
+| GET    | /api/projects/          | Retrieve project details      |
+| PATCH  | /api/projects/          | Update project fields         |
+| GET    | /api/activities         | Retrieve recent activities    |
+| GET    | /api/users              | List authorized users         |
+| GET    | /api/search             | Search authorized records     |
+| GET    | /api/settings/profile   | Retrieve profile settings     |
+| PATCH  | /api/settings/profile   | Update profile settings       |
+
+These endpoints are proposed interfaces, not existing services.
+
+API requirements:
+
+- Validate request parameters and payloads.
+- Authenticate requests and enforce authorization.
+- Use consistent error responses.
+- Support pagination and filtering.
+- Validate date ranges and timezone handling.
+- Avoid exposing sensitive information.
+- Document response schemas and business metric definitions.
+
+---
+
+## 17. Security and Audit Requirements
+
+- Enforce access control on the backend.
+- Validate all user-controlled input.
+- Protect against unauthorized object access.
+- Apply rate limits where appropriate.
+- Store secrets outside frontend code.
+- Avoid logging credentials, tokens, or sensitive personal information.
+- Record important administrative and permission changes.
+- Use secure session handling.
+- Follow the security requirements of the selected authentication provider.
+
+Destructive operations, permission changes, and account suspension should require appropriate authorization and clear user feedback.
+
+---
+
+## 18. Performance Requirements
+
+Initial targets, subject to deployment and dataset size:
+
+- Main layout should render promptly without waiting for every analytics request.
+- Cached dashboard responses should have a target response time of under 500 ms at the 95th percentile under the agreed test load.
+- Uncached API response targets should be established after profiling the real data source.
+- Large datasets must use pagination or aggregation.
+- Avoid repeated requests caused by component re-rendering.
+- Lazy-load nonessential visual assets.
+- Keep decorative effects from blocking primary interactions.
+- Avoid fetching every activity or project record just to display a summary.
+
+Performance should be measured against a defined environment and representative dataset.
+
+---
+
+## 19. Testing Requirements
+
+### Functional Tests
+
+- Authentication and logout.
+- Role-based access control.
+- KPI and chart date-range updates.
+- Project creation, editing, filtering, and status changes.
+- Activity ordering and navigation.
+- Search behavior.
+- Settings updates.
+- Export behavior, if implemented.
+
+### Integration Tests
+
+- Frontend and backend API contracts.
+- Analytics calculations against known datasets.
+- Database persistence.
+- Authorization enforcement.
+- Failure handling and retry behavior.
+
+### UI Tests
+
+- Desktop, tablet, and mobile layouts.
+- Loading, empty, and error states.
+- Chart labels and tooltips.
+- Keyboard accessibility.
+- Form validation.
+- No overlapping controls or horizontal overflow.
+
+### Regression Tests
+
+Changes to one widget must not unintentionally break other dashboard sections or shared components.
+
+---
+
+## 20. Acceptance Criteria
+
+The initial release is accepted when:
+
+1. Authenticated users can access the dashboard according to their permissions.
+2. KPI cards display values from a defined data source.
+3. Changing the reporting period refreshes the relevant metrics and charts.
+4. Revenue and channel charts display correct labels and data.
+5. Users can browse and filter projects.
+6. Authorized users can create and update projects.
+7. The activity feed displays persisted, correctly ordered events.
+8. Search returns only authorized records.
+9. Loading, empty, error, and partial-failure states work correctly.
+10. The interface adapts to desktop, tablet, and mobile screens.
+11. Critical actions are protected by backend authorization.
+12. No core workflow depends on hardcoded demo values.
+13. Automated tests cover critical business rules and permissions.
+
+---
+
+## 21. Suggested Delivery Phases
+
+### Phase 1 — Dashboard Foundation
+
+- Authentication integration
+- Main navigation
+- Dashboard layout
+- KPI summary API
+- Revenue chart
+- Channel distribution chart
+- Responsive behavior
+- Loading and error states
+
+### Phase 2 — Core Business Operations
+
+- Project list and details
+- Project creation and editing
+- Project status and progress management
+- Recent activity feed
+- Global search
+
+### Phase 3 — Administration and Reporting
+
+- User management
+- Profile and application settings
+- Role and permission management
+- CSV exports
+- Advanced analytics filters
+
+### Phase 4 — Optional Enhancements
+
+- Notifications
+- Subscription and billing integration
+- Advanced report comparisons
+- Automatic dashboard refresh
+- Additional analytics modules
+
+## 22. Scope and Assumptions
+
+The reference screenshot defines the visual structure but does not specify the underlying business domain, data sources, authentication provider, or billing system.
+
+Therefore:
+
+- KPI definitions must be confirmed with the business owner.
+- Analytics must be connected to an authoritative data source.
+- Demo data must be clearly separated from production data.
+- User roles and permissions must be finalized before implementation.
+- Notifications, billing, and advanced reporting should be treated as optional until confirmed.
+- The frontend must not simulate successful backend operations when no real integration exists.
+
+The implementation should prioritize a functional, testable dashboard with reliable data and secure permissions over decorative completeness alone.
+
+## 建议的开发顺序
+
+为了避免 AI 编程 Agent 先做出漂亮的页面，却在接入真实数据时需要大规模重构，建议按以下顺序实施：
+
+1. 先定义数据模型和 API 契约：确定收入、客户、转化率和项目状态的真实数据来源。
+2. 实现认证与权限控制：明确不同角色可以查看和修改哪些数据。
+3. 实现 Dashboard 和 Analytics：先打通 KPI、趋势图和渠道统计。
+4. 实现 Project Management 和 Activity Feed：确保增删改查与活动记录真实可用。
+5. 最后完善 UI 特效和可选功能：例如 3D 装饰、动效、订阅、通知。
+
+需要特别确认的一点： 截图更像是一个 SaaS 分析平台的展示模板，收入、客户和转化率等指标不一定对应你的真实业务。因此，这份文档先定义了通用功能，具体的业务指标、数据库字段和统计逻辑应在开发前确定。

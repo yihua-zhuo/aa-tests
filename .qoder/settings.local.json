@@ -1,0 +1,36 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(cat /proc/version; echo \"---\"; cat /etc/wsl.conf 2>/dev/null || echo \"no /etc/wsl.conf\"; echo \"---\"; hostname -I; echo \"---\"; ip route | head -5)",
+      "Bash(node -v; echo \"---\"; \\(ss -tlnp 2>/dev/null | grep -E ':\\(3000|8080\\)\\\\s' || echo \"ports 3000/8080 free\"\\))",
+      "Bash(node:*)",
+      "Bash(echo \"=== 1\\) WSL 内访问 localhost ===\"; curl -s --max-time 5 http://localhost:3000; echo; echo \"=== 2\\) WSL 内访问 WSL IP ===\"; curl -s --max-time 5 http://172.22.110.22:3000; echo; echo \"=== 3\\) 监听状态 ===\"; ss -tlnp | grep 3000)",
+      "Bash(echo \"=== 4\\) Windows 主机侧访问 localhost ===\"; curl.exe -s --max-time 5 http://localhost:3000 || echo \"curl.exe 失败或不存在\"; echo; echo \"=== 5\\) Windows 主机侧访问 WSL IP ===\"; curl.exe -s --max-time 5 http://172.22.110.22:3000 || echo \"curl.exe 失败或不存在\")",
+      "Bash(ls -la /mnt/c/ts 2>/dev/null | head -30; echo \"---\"; which node npm npx fnm nvm volta 2>/dev/null; echo \"---\"; ls ~/.nvm/versions/node 2>/dev/null || echo \"no nvm versions dir\"; ls ~/.local/share/fnm/node-versions 2>/dev/null || echo \"no fnm versions dir\")",
+      "Bash(npm config get registry; timeout 8 npm ping 2>&1 | tail -3; echo \"---\"; node -e \"console.log\\(process.versions\\)\")",
+      "Bash(curl -s --max-time 10 https://nodejs.org/dist/index.json | node -e \"let d='';process.stdin.on\\('data',c=>d+=c\\).on\\('end',\\(\\)=>{const v=JSON.parse\\(d\\);console.log\\(v.slice\\(0,8\\).map\\(x=>x.version+' \\('+\\(x.lts||'Current'\\)+'\\)'\\).join\\('\\\\n'\\)\\)}\\)\" 2>&1 | head -10)",
+      "Bash(source \"$HOME/.nvm/nvm.sh\" && nvm install 26.12.1 2>&1 | tail -5 && echo \"---\" && \"$HOME/.nvm/versions/node/v26.12.1/bin/node\" -v)",
+      "Bash(NODE=\"$HOME/.nvm/versions/node/v26.12.1/bin/node\"; printf 'const n: number = 41;\\\\nconsole.log\\(\"native TS ok:\", n + 1\\);\\\\n' > /tmp/ts-check.ts && \"$NODE\" /tmp/ts-check.ts; echo \"---\"; \"$NODE\" -e \"const s = require\\('node:sqlite'\\); const db = new s.DatabaseSync\\(':memory:'\\); db.exec\\('create table t\\(x\\)'\\); db.prepare\\('insert into t values \\(?\\)'\\).run\\(1\\); console.log\\('sqlite ok:', db.prepare\\('select count\\(*\\) c from t'\\).get\\(\\)\\); console.log\\('sqlite version:', db.prepare\\('select sqlite_version\\(\\) v'\\).get\\(\\)\\)\"; echo \"---\"; \"$NODE\" --help | grep -E \"experimental-test-coverage|test-coverage|strip-types|env-file\" | head -10)",
+      "Bash(NODE=\"$HOME/.nvm/versions/node/v26.12.1/bin/node\"; \"$NODE\" --help 2>&1 | rg -i \"coverage|strip-types|env-file\" | head)",
+      "Bash(cd /mnt/c/ts && node -e \"const e=require\\('./node_modules/@hono/node-server/package.json'\\).exports; console.log\\(JSON.stringify\\(e,null,1\\)\\)\" && ls node_modules/@hono/node-server/dist | head -20)",
+      "Bash(cd /mnt/c/ts && rg -n \"writeSSE|aborted|onAbort|sleep\" node_modules/hono/dist/types/helper/streaming/sse.d.ts node_modules/hono/dist/types/helper/streaming/stream.d.ts 2>/dev/null | head -30; echo \"---serve---\"; rg -n \"declare function serve|serve:\" node_modules/@hono/node-server/dist/*.d.ts | head -10)",
+      "Bash(cd /mnt/c/ts && cat node_modules/hono/dist/types/helper/streaming/sse.d.ts; echo \"---stream---\"; cat node_modules/hono/dist/types/helper/streaming/stream.d.ts; echo \"---serve-static head---\"; head -40 node_modules/@hono/node-server/dist/serve-static.d.mts; echo \"---serve---\"; rg -n \"declare const serve|ServerType|serve:\" node_modules/@hono/node-server/dist/index.d.mts | head)",
+      "Bash(cd /mnt/c/ts && cat node_modules/hono/dist/types/utils/stream.d.ts; echo \"---index option---\"; rg -n \"index\" node_modules/@hono/node-server/dist/serve-static.mjs | head)",
+      "Bash(export PATH=\"$HOME/.nvm/versions/node/v26.12.1/bin:$PATH\" && cd /mnt/c/ts && npm run typecheck 2>&1 | tail -30)",
+      "Bash(export PATH=\"$HOME/.nvm/versions/node/v26.12.1/bin:$PATH\" && cd /mnt/c/ts && node --test test/*.test.ts 2>&1 | tail -40)",
+      "Bash(export PATH=\"$HOME/.nvm/versions/node/v26.12.1/bin:$PATH\" && cd /mnt/c/ts && node --test test/*.test.ts 2>&1 | tail -15)",
+      "Bash(rm -f /tmp/net-test-server.js && cd /mnt/c/ts && export PATH=\"$HOME/.nvm/versions/node/v26.12.1/bin:$PATH\" && node src/server.ts)",
+      "Bash(cd /mnt/c/ts && echo \"=== / \\(HTML\\) ===\"; curl -s -o /dev/null -w \"status=%{http_code} type=%{content_type} size=%{size_download}\\\\n\" http://localhost:3000/; echo \"=== /app.js ===\"; curl -s -o /dev/null -w \"status=%{http_code} type=%{content_type} size=%{size_download}\\\\n\" http://localhost:3000/app.js; echo \"=== /style.css ===\"; curl -s -o /dev/null -w \"status=%{http_code} type=%{content_type} size=%{size_download}\\\\n\" http://localhost:3000/style.css; echo \"=== health ===\"; curl -s http://localhost:3000/api/health; echo; echo \"=== app.js syntax ===\"; \"$HOME/.nvm/versions/node/v26.12.1/bin/node\" --check public/app.js && echo \"syntax ok\")",
+      "Bash(cd /mnt/c/ts && curl -sN --max-time 3 http://localhost:3000/api/events > /tmp/sse-check.out 2>&1 & SSE_PID=$!; sleep 0.7; RESP=$\\(curl -s -X POST -H 'content-type: application/json' -d '{\"title\":\"SSE 实时验证\"}' http://localhost:3000/api/tasks\\); echo \"POST -> $RESP\"; sleep 0.7; wait $SSE_PID 2>/dev/null; echo \"--- SSE 流内容 ---\"; cat /tmp/sse-check.out)",
+      "Bash(find /mnt/c/ts/src /mnt/c/ts/shared /mnt/c/ts/web /mnt/c/ts/scripts /mnt/c/ts/test /mnt/c/ts/e2e /mnt/c/ts/data -type f -not -path '*/node_modules/*' | head -200)",
+      "Bash(cd /mnt/c/ts && printf '%s\\\\n' src/* src/**/* shared/* shared/**/* web/* web/**/* scripts/* test/* e2e/* data/* 2>/dev/null | head -100)",
+      "Bash(cd /mnt/c/ts && printf '%s\\\\n' web/src/**/*.tsx web/src/**/*.ts test/*.ts e2e/*.ts scripts/* data/* 2>/dev/null | sort -u; echo '---lines---'; wc -l src/*.ts src/**/*.ts shared/*.ts web/src/*.tsx web/src/**/*.ts* test/*.ts e2e/*.ts scripts/* 2>/dev/null | tail -60)",
+      "Bash(cd /mnt/c/ts && ls -la web/src && wc -l web/src/styles.css 2>/dev/null; cat .nvmrc .gitignore tsconfig.json web/tsconfig.json playwright.config.ts 2>/dev/null | head -120)",
+      "Bash(cd /mnt/c/ts && npm run typecheck)",
+      "Bash(cd /mnt/c/ts && npm test)",
+      "Bash(cd /mnt/c/ts && node --test test/auth.test.ts 2>&1 | tail -40)",
+      "Bash(node -v; which node; ls ~/.nvm/versions/node 2>/dev/null; command -v nvm || true; cat ~/.bashrc 2>/dev/null | grep -n nvm | head; cat ~/.zshrc 2>/dev/null | grep -n nvm | head)",
+      "Bash(find /mnt/c/ts/src /mnt/c/ts/shared /mnt/c/ts/test /mnt/c/ts/web -type f -not -path '*/node_modules/*' | head -200)"
+    ]
+  }
+}

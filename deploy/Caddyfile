@@ -1,0 +1,21 @@
+# Example Caddyfile. Caddy obtains and renews TLS automatically.
+# Run the app with TRUST_PROXY=1 and COOKIE_SECURE=1.
+
+pulse.example.com {
+	encode zstd gzip
+
+	# flush_interval -1 disables buffering so SSE (/api/events) streams immediately.
+	reverse_proxy 127.0.0.1:3000 {
+		flush_interval -1
+	}
+
+	header {
+		Strict-Transport-Security "max-age=31536000; includeSubDomains" always
+		-Server
+	}
+
+	log {
+		output file /var/log/caddy/pulse-access.log
+		format json
+	}
+}
