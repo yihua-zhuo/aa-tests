@@ -4,7 +4,8 @@ SaaS 分析与项目协作工作台：Hono + Node.js 内置 SQLite（`node:sqlit
 包含 RBAC、项目回收站、活动流与 SSE 实时更新、WebSocket 协作、审计与指标、MFA、
 CSV 导入导出、图表无障碍与导出、中英文界面、带作用域的个人访问令牌与签名
 Webhook 集成、任务/子任务/里程碑、评论与通知中心、附件（类型/大小校验、签名私有
-下载链接）与头像上传裁剪，以及标签、收藏、个人视图与批量操作等能力；分析数据支持
+下载链接、原生抽取优先的本地 OCR 与质量复核）与头像上传裁剪，以及标签、收藏、
+个人视图与批量操作等能力；分析数据支持
 CSV/API 导入、工作区币种与汇率换算、CSV 导出和每周/每月定时报表邮件。前端支持安装为
 PWA：Service Worker 缓存应用外壳，离线时可查看最近同步的只读快照；开启浏览器通知后，
 新消息通过 Web Push（VAPID + RFC 8291 加密）推送到桌面与移动端。
@@ -59,7 +60,9 @@ docker compose up -d --build
 
 完整的部署、升级/回滚、备份恢复与反向代理示例见
 [docs/deployment.md](docs/deployment.md)；当前功能、角色权限与模块说明见
-[docs/features.md](docs/features.md)。环境变量全集见
+[docs/features.md](docs/features.md)；OCR 完整方案、部署与识别率优化见
+[docs/ocr-solution.md](docs/ocr-solution.md)，文档智能架构与质量/基准指标见
+[docs/document-intelligence.md](docs/document-intelligence.md)。环境变量全集见
 [.env.example](.env.example)。
 
 ## 常用脚本

@@ -83,6 +83,22 @@ test('personal access tokens authenticate with read scope and enforce write scop
     const webhooks = await bearer(app, created.token, '/api/profile/webhooks');
     assert.equal(webhooks.status, 403);
 
+    for (const path of ['/api/ocr/lab', '/api/ocr/registry', '/api/ocr/feedback']) {
+      const ocr = await bearer(app, created.token, path);
+      assert.equal(ocr.status, 403, path);
+      assert.equal(((await ocr.json()) as { error: string }).error, 'session_required', path);
+    }
+    const ocrWrite = await bearer(app, created.token, '/api/ocr/registry/evaluate', {
+      method: 'POST',
+      body: {},
+    });
+    assert.equal(ocrWrite.status, 403);
+    assert.equal(
+      ((await ocrWrite.json()) as { error: string }).error,
+      'session_required',
+      'session-only check precedes scope checks',
+    );
+
     const writer = await createToken(app, cookie, {
       name: '自动化写入',
       scopes: ['write'],

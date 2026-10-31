@@ -30,7 +30,13 @@
       "Bash(cd /mnt/c/ts && npm test)",
       "Bash(cd /mnt/c/ts && node --test test/auth.test.ts 2>&1 | tail -40)",
       "Bash(node -v; which node; ls ~/.nvm/versions/node 2>/dev/null; command -v nvm || true; cat ~/.bashrc 2>/dev/null | grep -n nvm | head; cat ~/.zshrc 2>/dev/null | grep -n nvm | head)",
-      "Bash(find /mnt/c/ts/src /mnt/c/ts/shared /mnt/c/ts/test /mnt/c/ts/web -type f -not -path '*/node_modules/*' | head -200)"
+      "Bash(find /mnt/c/ts/src /mnt/c/ts/shared /mnt/c/ts/test /mnt/c/ts/web -type f -not -path '*/node_modules/*' | head -200)",
+      "Bash(git ls-files | xargs wc -l 2>/dev/null | sort -rn | head -50)",
+      "Bash(echo \"health: $\\(curl -s -o /dev/null -w '%{http_code}' http://127.0.0.1:3000/api/health\\)\"; echo \"vite: $\\(curl -s -o /dev/null -w '%{http_code}' http://127.0.0.1:5173/\\)\"; ss -ltn 2>/dev/null | awk '$4 ~ /:\\(3000|5173\\)$/ {print $4}')",
+      "Bash(ls -laR benchmarks/ | head -80; echo \"---root---\"; ls -la /mnt/c/ts | head -50)",
+      "Bash(ls -la /mnt/c/ts/benchmarks /mnt/c/ts/benchmarks/* 2>/dev/null | head -80)",
+      "Bash(grep -n \"Ocr\\\\b\\\\|OcrMode\\\\|OcrEngine\\\\|OcrBench\" /mnt/c/ts/shared/types.ts | head -60)",
+      "Bash(ls -la /mnt/c/ts && ls -la /mnt/c/ts/docs /mnt/c/ts/src /mnt/c/ts/test /mnt/c/ts/benchmarks /mnt/c/ts/scripts && wc -l /mnt/c/ts/src/ocr*.ts /mnt/c/ts/src/stores/ocr-bench.ts /mnt/c/ts/src/routes/ocr-lab.ts /mnt/c/ts/test/ocr*.ts /mnt/c/ts/docs/ocr*.md /mnt/c/ts/docs/document-intelligence.md)"
     ]
   }
 }

@@ -681,6 +681,8 @@ export type UserCreateInput = z.infer<typeof UserCreateSchema>;
 export type UserUpdateInput = z.infer<typeof UserUpdateSchema>;
 
 const RetentionDaysSchema = z.number().int().min(1, '至少保留 1 天').max(3650, '最多保留 3650 天');
+/** OCR retention accepts 0, which disables automatic purging. */
+const OcrRetentionDaysSchema = z.number().int().min(0, '不能为负数').max(3650, '最多保留 3650 天');
 
 export const OpsSettingsUpdateSchema = z
   .object({
@@ -688,6 +690,7 @@ export const OpsSettingsUpdateSchema = z
     trashRetentionDays: RetentionDaysSchema.optional(),
     auditRetentionDays: RetentionDaysSchema.optional(),
     activityRetentionDays: RetentionDaysSchema.optional(),
+    ocrRetentionDays: OcrRetentionDaysSchema.optional(),
     demoDataEnabled: z.boolean().optional(),
   })
   .openapi('OpsSettingsUpdate');

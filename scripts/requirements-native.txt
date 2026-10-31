@@ -1,0 +1,19 @@
+# Optional native extraction helpers for scripts/ocr_sidecar.py.
+# PaddleOCR, PP-StructureV3 and Docling are installed separately (see README).
+# Every entry here is optional: the sidecar falls back to Paddle/Docling when a
+# package is missing, so install only what the deployment needs.
+
+# Digital PDF text layers, line boxes and native tables.
+pdfplumber>=0.11
+
+# Native DOCX / XLSX / PPTX extraction (round-trips tables and text order).
+python-docx>=1.1
+openpyxl>=3.1
+python-pptx>=0.6.23
+
+# EXIF-aware image loading and multi-frame TIFF/GIF splitting.
+Pillow>=10.0
+
+# Camelot is intentionally not listed: it needs Ghostscript, and PP-StructureV3
+# already handles tables. Install `camelot-py[cv]` only for PDFs where native
+# table extraction measurably wins.

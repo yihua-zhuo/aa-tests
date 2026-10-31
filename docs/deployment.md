@@ -45,6 +45,8 @@ curl -fsS http://127.0.0.1:3000/api/health
   `sudo chown -R 1000:1000 data`。
 - 端口只绑定 `127.0.0.1`，由反向代理对外提供 TLS。
 - 容器带 `HEALTHCHECK`，并设置 `stop_grace_period: 20s` 以等待优雅关闭。
+- 可选 OCR sidecar（PaddleOCR / Docling）不随默认部署启动，构建、启用与排错见
+  [`deploy/ocr/README.md`](../deploy/ocr/README.md)（`docker compose --profile ocr up -d --build`）。
 
 直接运行镜像（不使用 Compose）时，必须显式传入管理员与 TLS 相关变量：
 

@@ -58,6 +58,13 @@ type Histogram = {
   count: number;
 };
 
+export type OcrQueueCounts = {
+  pending: number;
+  processing: number;
+  failed: number;
+  done: number;
+};
+
 export type MetricSnapshot = {
   sseClients: number;
   wsClients: number;
@@ -65,6 +72,7 @@ export type MetricSnapshot = {
   users: number;
   sessions: number;
   slowQueries: number;
+  ocr: OcrQueueCounts;
 };
 
 export class Metrics {
@@ -147,6 +155,11 @@ export class Metrics {
     lines.push(`node_pulse_login_failures_total ${this.#loginFailures}`);
     lines.push('# TYPE node_pulse_slow_queries_total counter');
     lines.push(`node_pulse_slow_queries_total ${snapshot.slowQueries}`);
+    lines.push('# TYPE node_pulse_ocr_queue gauge');
+    lines.push(`node_pulse_ocr_queue{status="pending"} ${snapshot.ocr.pending}`);
+    lines.push(`node_pulse_ocr_queue{status="processing"} ${snapshot.ocr.processing}`);
+    lines.push(`node_pulse_ocr_queue{status="failed"} ${snapshot.ocr.failed}`);
+    lines.push(`node_pulse_ocr_queue{status="done"} ${snapshot.ocr.done}`);
 
     return `${lines.join('\n')}\n`;
   }

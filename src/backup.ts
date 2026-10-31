@@ -59,6 +59,8 @@ export type BackupSchedulerOptions = {
     trashRetentionDays: number;
     auditRetentionDays: number;
     activityRetentionDays: number;
+    /** 0 keeps OCR text indefinitely; omitted behaves like 0. */
+    ocrRetentionDays?: number;
   };
 };
 
@@ -103,6 +105,7 @@ export function startBackupScheduler(
         trashRetentionDays: options.trashRetentionDays,
         auditRetentionDays: store.audit.retention.days,
         activityRetentionDays: 0,
+        ocrRetentionDays: 0,
       };
       const file = backupDatabase(store.db, options.dir, at);
       const pruned = pruneBackups(options.dir, policy.backupRetentionDays, at.getTime());
@@ -113,12 +116,15 @@ export function startBackupScheduler(
         policy.activityRetentionDays > 0
           ? store.activities.cleanup(policy.activityRetentionDays, at.getTime())
           : 0;
+      const ocrPurged = store.attachments.purgeOcrText(policy.ocrRetentionDays ?? 0, at.getTime());
       log('info', 'backup.completed', {
         file,
         pruned,
         purgedProjects: purged,
         auditTrimmed,
         activitiesTrimmed,
+        ocrTextsPurged: ocrPurged.attachments,
+        ocrRevisionsPurged: ocrPurged.revisions,
         retentionDays: policy.backupRetentionDays,
       });
       return file;

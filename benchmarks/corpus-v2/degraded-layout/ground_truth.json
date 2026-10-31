@@ -1,0 +1,284 @@
+{
+  "defocused_receiving_log.png": {
+    "conditions": {
+      "mode": "enhanced"
+    },
+    "degradations": [
+      "defocus_blur",
+      "low_contrast",
+      "noise",
+      "running_header",
+      "running_footer"
+    ],
+    "difficulty": "severe",
+    "fields": {
+      "carrier": "RIDGELINE",
+      "dock": "DOCK 2",
+      "page": "PAGE 4 OF 12",
+      "pallets": "12",
+      "seal": "S-4410"
+    },
+    "keywords": [
+      "APEX WAREHOUSE RECEIVING LOG",
+      "RIDGELINE",
+      "S-4410",
+      "WATER DAMAGE"
+    ],
+    "kind": "image-defocused",
+    "lang": "en",
+    "provenance": {
+      "annotatedAt": "2026-10-31T00:00:00Z",
+      "annotator": "synthetic-generator",
+      "sha256": "7a0d0e04ebcfc4f1045678ce5c46e7d9eecf5007849d900760758df130983e70",
+      "source": "scripts/generate_degraded_corpus.py"
+    },
+    "text": "APEX WAREHOUSE RECEIVING LOG PAGE 4 OF 12 RECEIVING LOG DOCK 2 - SHIFT B TIME CARRIER PALLETS SEAL 07:40 RIDGELINE 12 S-4410 08:15 NORTHPORT 8 S-4411 09:05 RIDGELINE 10 S-4412 PALLET COUNTS WERE VERIFIED AGAINST THE MANIFEST. TWO PALLETS ON THE SECOND TRUCK SHOWED WATER DAMAGE AND WERE HELD FOR INSPECTION. DRIVER SIGNATURE: R. HALE APEX WAREHOUSE RECEIVING LOG PAGE 4 OF 12"
+  },
+  "fax_low_resolution.png": {
+    "conditions": {
+      "dpi": 200,
+      "mode": "enhanced"
+    },
+    "degradations": [
+      "fax",
+      "low_resolution",
+      "speckle",
+      "scan_lines"
+    ],
+    "difficulty": "severe",
+    "fields": {
+      "date": "2026-10-26",
+      "pages": "2 OF 3",
+      "recipient": "DOCUMENT CONTROL",
+      "shift_a": "214 UNITS",
+      "signed": "R. VOSS"
+    },
+    "keywords": [
+      "FAX TRANSMISSION",
+      "PRESSURE SENSOR",
+      "214 UNITS",
+      "R. VOSS"
+    ],
+    "kind": "image-fax",
+    "lang": "en",
+    "provenance": {
+      "annotatedAt": "2026-10-31T00:00:00Z",
+      "annotator": "synthetic-generator",
+      "sha256": "da7c3fe5a6a242075768dc2072eae67988b36d0d7c3daa26c2882c6aa85e23bf",
+      "source": "scripts/generate_degraded_corpus.py"
+    },
+    "text": "FAX TRANSMISSION TO: DOCUMENT CONTROL FROM: SITE 14 DATE: 2026-10-26 PAGES: 2 OF 3 RE: DAILY PLANT LOG UNIT 3 TRIPPED AT 04:12 AND WAS RESTARTED AT 05:05. NO INJURIES WERE REPORTED. THE CAUSE WAS A FAILED PRESSURE SENSOR. A REPLACEMENT WAS FITTED FROM STORES. THE LINE RAN AT 88 PERCENT OF RATED SPEED FOR THE REST OF THE SHIFT. SHIFT A: 214 UNITS SHIFT B: 198 UNITS SHIFT C: 206 UNITS SIGNED: R. VOSS FAX LOG 2026-10-26 / PAGE 1"
+  },
+  "glare_shadow_notice.png": {
+    "conditions": {
+      "mode": "enhanced"
+    },
+    "degradations": [
+      "glare",
+      "shadow_gradient",
+      "uneven_lighting",
+      "noise"
+    ],
+    "difficulty": "severe",
+    "fields": {
+      "deadline": "2026-11-09",
+      "extension": "4412",
+      "period_end": "2026-09-30",
+      "reference": "AUD-2026-114"
+    },
+    "keywords": [
+      "AUDIT NOTICE",
+      "BANK STATEMENTS",
+      "TEN WORKING DAYS",
+      "2026-11-09"
+    ],
+    "kind": "image-glare",
+    "lang": "en",
+    "provenance": {
+      "annotatedAt": "2026-10-31T00:00:00Z",
+      "annotator": "synthetic-generator",
+      "sha256": "4416296c293eb5528f5ffbd7b59f6850bca83d7452c279fa6e0aff27e12548a8",
+      "source": "scripts/generate_degraded_corpus.py"
+    },
+    "text": "AUDIT NOTICE REF: AUD-2026-114 PLEASE PROVIDE THE FOLLOWING RECORDS FOR THE PERIOD ENDING 2026-09-30. BANK STATEMENTS, PURCHASE LEDGER, AND INVENTORY COUNTS ARE DUE WITHIN TEN WORKING DAYS OF THIS NOTICE. CONTACT THE AUDIT DESK IF ANY RECORD IS UNAVAILABLE. LATE SUBMISSIONS ARE LOGGED AND REPORTED. RESPONSE DUE: 2026-11-09 AUDIT DESK - EXTENSION 4412"
+  },
+  "mixed_text_scale.png": {
+    "conditions": {
+      "mode": "auto"
+    },
+    "degradations": [
+      "mixed_text_scale",
+      "small_text",
+      "dense_text"
+    ],
+    "difficulty": "moderate",
+    "fields": {
+      "cost": "96 CNY",
+      "escalation": "6 PERCENT",
+      "growth": "38.6%",
+      "headline": "STORAGE COSTS",
+      "share": "41 PERCENT"
+    },
+    "keywords": [
+      "STORAGE COSTS",
+      "38.6%",
+      "41 PERCENT",
+      "96 CNY",
+      "SOUTH ANNEX"
+    ],
+    "kind": "image-mixed-scale",
+    "lang": "en",
+    "provenance": {
+      "annotatedAt": "2026-10-31T00:00:00Z",
+      "annotator": "synthetic-generator",
+      "sha256": "49802d7d9bf5e8467f07ea24a2bb1e2f9a5d7bf01f868ab43e917ed62c7f447d",
+      "source": "scripts/generate_degraded_corpus.py"
+    },
+    "text": "ANNUAL LOGISTICS BRIEF / SECTION 2 PAGE 7 STORAGE COSTS JUMP AGAIN 38.6% YEAR OVER YEAR INCREASE WAREHOUSE RENTS ROSE ACROSS ALL THREE REGIONS. THE LARGEST INCREASE WAS RECORDED AT THE INLAND HUB, WHERE NEW LEASES SIGNED IN JUNE RESET THE BASE RATE. SHORT TERM OVERFLOW SPACE COST 2.4 TIMES THE CONTRACT RATE AND ACCOUNTED FOR MOST OF THE VARIANCE. OPERATIONS RECOMMENDS CONSOLIDATING SLOW MOVING STOCK INTO THE SOUTH ANNEX BEFORE THE NEXT PEAK SEASON. THE INLAND HUB NOW ACCOUNTS FOR 41 PERCENT OF TOTAL STORAGE SPEND, UP FROM 28 PERCENT LAST YEAR. MONTHLY COST PER PALLET REACHED 96 CNY. WHAT CHANGED THE 2027 BUDGET ASSUMES A FLAT VOLUME AND A 6 PERCENT RENT ESCALATION. ANY NEW CONTRACT ABOVE 120 CNY PER PALLET REQUIRES REGIONAL APPROVAL. COST PER PALLET 96 CNY ANNUAL LOGISTICS BRIEF PAGE 7"
+  },
+  "motion_blur_receipt.png": {
+    "conditions": {
+      "mode": "enhanced"
+    },
+    "degradations": [
+      "motion_blur",
+      "low_contrast",
+      "noise"
+    ],
+    "difficulty": "severe",
+    "fields": {
+      "amount": "386.00 CNY",
+      "date": "2026-10-27",
+      "payment": "CARD",
+      "receipt": "R-88421",
+      "weight": "12.4 KG"
+    },
+    "keywords": [
+      "EASTLINE COURIER",
+      "R-88421",
+      "386.00 CNY",
+      "12.4 KG"
+    ],
+    "kind": "image-blurred",
+    "lang": "en",
+    "provenance": {
+      "annotatedAt": "2026-10-31T00:00:00Z",
+      "annotator": "synthetic-generator",
+      "sha256": "8c164b7140ef4e0a222c95fe3ee8f336a5c1c9b2ce56e637dca097df62ea493d",
+      "source": "scripts/generate_degraded_corpus.py"
+    },
+    "text": "EASTLINE COURIER SAME DAY DELIVERY RECEIPT #R-88421 DATE: 2026-10-27 SERVICE: SAME DAY WEIGHT: 12.4 KG CHARGE: 386.00 CNY PAID BY CARD THANK YOU KEEP THIS RECEIPT FOR YOUR RECORDS"
+  },
+  "multicolumn_sidebar.png": {
+    "conditions": {
+      "mode": "auto"
+    },
+    "degradations": [
+      "multi_column",
+      "uneven_columns",
+      "sidebar",
+      "reading_order",
+      "running_header",
+      "running_footer",
+      "dense_text"
+    ],
+    "difficulty": "moderate",
+    "fields": {
+      "dock_utilization": "91 PERCENT",
+      "fleet_distance": "88,400",
+      "fuel_cost": "0.42 CNY",
+      "growth": "9.4%",
+      "parcels": "412,880",
+      "report": "NETWORK CAPACITY REVIEW"
+    },
+    "keywords": [
+      "NETWORK CAPACITY REVIEW",
+      "412,880",
+      "9.4%",
+      "91 PERCENT",
+      "88,400",
+      "0.42 CNY"
+    ],
+    "kind": "image-multicolumn",
+    "lang": "en",
+    "provenance": {
+      "annotatedAt": "2026-10-31T00:00:00Z",
+      "annotator": "synthetic-generator",
+      "sha256": "4ab77a32b0f91601d8a4b10c5a0265ea0085a95472ea5c32765ef0f825a88b56",
+      "source": "scripts/generate_degraded_corpus.py"
+    },
+    "text": "NORTHWIND LOGISTICS BULLETIN PAGE 3 OF 8 NETWORK CAPACITY REVIEW REGION NORTH - PERIOD 2026 Q3 AT A GLANCE 412,880 PARCELS UP 9.4% QUARTER OVER QUARTER 91% DOCK UTILIZATION SECOND SHIFT ADDED IN AUGUST THE NORTH CORRIDOR CARRIED 412,880 PARCELS IN Q3, UP 9.4% QUARTER OVER QUARTER. SORTING CAPACITY AT THE DOCK REMAINED THE BINDING CONSTRAINT DURING PEAK WEEKS. THE TEAM ADDED A SECOND SHIFT IN AUGUST AND CUT QUEUE TIME BY 14 MINUTES. DOCK 4 RAN AT 91 PERCENT UTILIZATION FOR MOST OF SEPTEMBER. TWO NEW DOCK DOORS ARE SCHEDULED FOR COMMISSIONING IN JANUARY. UNTIL THEN, OVERFLOW TRAILERS ARE STAGED AT THE WEST YARD. THE REGIONAL CONTROL TOWER WILL PUBLISH A REVISED CAPACITY PLAN BEFORE THE NEXT PLANNING CYCLE. QUEUE TIME AT THE GATE AVERAGED 6 MINUTES. THE FLEET TRAVELLED 88,400 KM WITH 2.1 PERCENT IDLE TIME. FUEL COST PER PARCEL FELL TO 0.42 CNY, THE LOWEST LEVEL SINCE 2024. THE SOUTH CORRIDOR REMAINS BELOW PLAN AT 71 PERCENT UTILIZATION. VOLUME THERE IS FLAT. NOTE THE 2027 PLAN ASSUMES NO ADDITIONAL DOCK CAPACITY. NORTHWIND LOGISTICS BULLETIN INTERNAL USE ONLY PAGE 3 OF 8"
+  },
+  "skewed_photo_warp.png": {
+    "conditions": {
+      "mode": "enhanced"
+    },
+    "degradations": [
+      "rotation",
+      "perspective",
+      "shadow_gradient",
+      "low_contrast",
+      "noise"
+    ],
+    "difficulty": "severe",
+    "fields": {
+      "asset": "PUMP P-118",
+      "date": "2026-10-29",
+      "inspector": "M. OKAFOR",
+      "next_survey": "2026-12-15",
+      "site": "HARBOR GATE 2"
+    },
+    "keywords": [
+      "SITE SURVEY NOTES",
+      "HARBOR GATE 2",
+      "PUMP P-118",
+      "DISCHARGE FLANGE",
+      "REDUCED PRESSURE"
+    ],
+    "kind": "image-skewed",
+    "lang": "en",
+    "provenance": {
+      "annotatedAt": "2026-10-31T00:00:00Z",
+      "annotator": "synthetic-generator",
+      "sha256": "9281f68806b451df3ad86030ad9f471ca0e2b5cd55ff3173f4524bb291d7e51a",
+      "source": "scripts/generate_degraded_corpus.py"
+    },
+    "text": "SITE SURVEY NOTES SITE: HARBOR GATE 2 DATE: 2026-10-29 INSPECTOR: M. OKAFOR ASSET: PUMP P-118 INSPECTION FOUND CORROSION ON THE DISCHARGE FLANGE. REPLACEMENT PARTS ARE ON ORDER. THE UNIT REMAINS IN SERVICE AT REDUCED PRESSURE. NEXT SURVEY DUE 2026-12-15. RECORDED BY: M. OKAFOR"
+  },
+  "two_page_footnote.png": {
+    "conditions": {
+      "mode": "structure"
+    },
+    "degradations": [
+      "page_break",
+      "footnote",
+      "repeated_header",
+      "repeated_footer",
+      "multi_page"
+    ],
+    "difficulty": "moderate",
+    "fields": {
+      "order": "WO-2026-331",
+      "page_one_total": "36.5",
+      "page_two_total": "12.0",
+      "technician": "A. LIND",
+      "week": "WEEK 43 - 2026"
+    },
+    "keywords": [
+      "ACME FIELD SERVICE REPORT",
+      "WEEKLY LABOR SUMMARY",
+      "36.5",
+      "WO-2026-331",
+      "INCLUDES TRAVEL TIME"
+    ],
+    "kind": "image-report",
+    "lang": "en",
+    "provenance": {
+      "annotatedAt": "2026-10-31T00:00:00Z",
+      "annotator": "synthetic-generator",
+      "sha256": "31970f1893b7b3cbd4967f83d804912dca220ff518c2d872bf65fc7da3716303",
+      "source": "scripts/generate_degraded_corpus.py"
+    },
+    "text": "ACME FIELD SERVICE REPORT PAGE 1 OF 2 WEEKLY LABOR SUMMARY WEEK 43 - 2026 TECHNICIAN HOURS RATE AMOUNT A. LIND 18.5 120.00 2,220.00 B. OKORO 12.0 135.00 1,620.00 C. DIAZ 6.0 110.00 660.00 TOTAL HOURS 36.5(1) OVERTIME IS BILLED AT 1.5 TIMES THE STANDARD RATE. MILEAGE IS NOT INCLUDED IN THIS SUMMARY. (1) INCLUDES TRAVEL TIME AND STANDBY. ACME FIELD SERVICE REPORT PAGE 1 OF 2 ACME FIELD SERVICE REPORT PAGE 2 OF 2 WEEKLY LABOR SUMMARY TECHNICIAN HOURS RATE AMOUNT D. NOVAK 9.0 125.00 1,125.00 E. SILVA 3.0 140.00 420.00 TOTAL HOURS 12.0 ALL HOURS WERE APPROVED BY THE SITE SUPERVISOR. WORK ORDER WO-2026-331 IS NOW CLOSED. END OF REPORT ACME FIELD SERVICE REPORT PAGE 2 OF 2"
+  }
+}

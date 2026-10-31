@@ -17,6 +17,7 @@ const SESSION_ONLY_PREFIXES = [
   '/api/profile/mfa',
   '/api/sessions',
   '/api/ops',
+  '/api/ocr',
 ];
 
 export function sessionToken(c: Context): string | undefined {

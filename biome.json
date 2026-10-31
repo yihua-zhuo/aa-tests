@@ -11,7 +11,8 @@
       "!**/.claude",
       "!**/.idea",
       "!**/.jbeval",
-      "!**/playwright-report"
+      "!**/playwright-report",
+      "!**/benchmarks/corpus-v2"
     ]
   },
   "formatter": {

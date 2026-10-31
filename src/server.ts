@@ -10,6 +10,9 @@ import { banner, log } from './logger.ts';
 import { createMailer } from './mailer.ts';
 import { parseHosts, parseOrigins } from './net.ts';
 import { NotificationWorker } from './notification-worker.ts';
+import { OcrClient } from './ocr.ts';
+import { OcrBench } from './ocr-bench.ts';
+import { OcrWorker } from './ocr-worker.ts';
 import { PushSender } from './push.ts';
 import { PushWorker } from './push-worker.ts';
 import { isDemoEmail } from './seed.ts';
@@ -92,6 +95,18 @@ const enterpriseWorker = new EnterpriseWorker(store, {
   intervalMs: positiveIntEnv('ENTERPRISE_INTERVAL_SECONDS', 60) * 1000,
 });
 enterpriseWorker.start();
+const ocrClient = new OcrClient();
+const ocrLab = new OcrBench(store, ocrClient);
+// One worker per engine: a long Paddle job must not block Docling conversions.
+const ocrIntervalMs = positiveIntEnv('OCR_INTERVAL_SECONDS', 5) * 1000;
+const ocrWorkers = ocrClient.engines.map(
+  (engine) =>
+    new OcrWorker(store, ocrClient, {
+      intervalMs: ocrIntervalMs,
+      engines: [engine],
+    }),
+);
+for (const worker of ocrWorkers) worker.start();
 const backupDir = process.env.BACKUP_DIR ?? defaultBackupDir(dbPath);
 const backups = startBackupScheduler(store, {
   dir: backupDir,
@@ -128,6 +143,11 @@ const app = createApp(store, hub, {
   isReady: () => !shuttingDown,
   push: pushSender,
   backupDir,
+  ocrWake: () => {
+    for (const worker of ocrWorkers) void worker.tick();
+  },
+  ocrModelPeek: (engine) => ocrClient.peekModel(engine),
+  ocrLab,
 });
 
 const server = serve(
@@ -143,6 +163,7 @@ const server = serve(
       staticDir,
       demo: store.demo,
       mail: Boolean(mailer),
+      ocr: ocrClient.engines,
     });
   },
 );
@@ -167,6 +188,7 @@ function shutdown(signal: NodeJS.Signals): void {
   webhookWorker.stop();
   pushWorker.stop();
   enterpriseWorker.stop();
+  const ocrStopped = Promise.all(ocrWorkers.map((worker) => worker.stop()));
 
   const force = setTimeout(() => {
     log('warn', 'server.force_exit');
@@ -181,7 +203,9 @@ function shutdown(signal: NodeJS.Signals): void {
     wsHub.closeAll();
     wss.close();
     httpServer.closeIdleConnections();
-    server.close(() => {
+    server.close(async () => {
+      // Requeued OCR jobs are only safe to abandon once the workers settle.
+      await ocrStopped;
       clearTimeout(force);
       store.close();
       log('info', 'server.closed', { signal });

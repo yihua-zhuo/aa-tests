@@ -1,4 +1,5 @@
 import assert from 'node:assert/strict';
+import { randomUUID } from 'node:crypto';
 import { existsSync, mkdtempSync, rmSync } from 'node:fs';
 import { tmpdir } from 'node:os';
 import { join } from 'node:path';
@@ -84,16 +85,24 @@ describe('admin ops panel', () => {
       await send(app, cookie, 'PATCH', '/api/ops/settings', {
         backupRetentionDays: 7,
         activityRetentionDays: 45,
+        ocrRetentionDays: 0,
       }),
     );
     assert.equal(settings.backupRetentionDays, 7);
     assert.equal(settings.activityRetentionDays, 45);
+    assert.equal(settings.ocrRetentionDays, 0);
     assert.equal(store.ops.retention().backupRetentionDays, 7);
+    assert.equal(store.ops.retention().ocrRetentionDays, 0);
 
     const invalid = await send(app, cookie, 'PATCH', '/api/ops/settings', {
       backupRetentionDays: 0,
     });
     assert.equal(invalid.status, 400);
+
+    const negativeOcr = await send(app, cookie, 'PATCH', '/api/ops/settings', {
+      ocrRetentionDays: -1,
+    });
+    assert.equal(negativeOcr.status, 400);
 
     const { flag } = await json<{ flag: { key: string; enabled: boolean } }>(
       await send(app, cookie, 'PATCH', '/api/ops/features/analytics', { enabled: false }),
@@ -264,6 +273,44 @@ describe('admin ops panel', () => {
       )
       .run(old);
 
+    const owner = store.users.authByEmail(DEMO_USERS[0].email);
+    assert.ok(owner);
+    const project = store.projects.create(
+      { name: 'OCR 保留期' },
+      { id: owner.id, name: owner.name },
+    );
+    const attachmentId = randomUUID();
+    store.attachments.create({
+      id: attachmentId,
+      projectId: project.id,
+      uploaderId: owner.id,
+      name: 'old-scan.png',
+      mime: 'image/png',
+      size: 16,
+      storedName: `old-${attachmentId}.bin`,
+      sha256: 'c'.repeat(64),
+      createdAt: old,
+      ocrTarget: 'paddle',
+    });
+    store.attachments.completeOcr(
+      attachmentId,
+      {
+        text: '旧扫描件的识别文本',
+        confidence: 0.9,
+        model: 'fake-model',
+        engineModel: 'fake-model',
+        configHash: 'retention-test',
+        seconds: 1,
+        pages: 1,
+        truncated: false,
+        route: 'visual',
+        quality: null,
+        stages: [],
+        document: null,
+      },
+      old,
+    );
+
     const scheduler = startBackupScheduler(store, {
       dir: join(dir, 'retention-backups'),
       retentionDays: 14,
@@ -275,6 +322,7 @@ describe('admin ops panel', () => {
         trashRetentionDays: 30,
         auditRetentionDays: 30,
         activityRetentionDays: 30,
+        ocrRetentionDays: 30,
       }),
     });
     try {
@@ -290,6 +338,9 @@ describe('admin ops panel', () => {
       .prepare("SELECT COUNT(*) AS n FROM audit_log WHERE action = 'test.old'")
       .get() as unknown as { n: number };
     assert.equal(Number(audits.n), 0);
+    const ocr = store.attachments.findOcr(attachmentId);
+    assert.ok(ocr?.purgedAt);
+    assert.equal(ocr?.text, '');
   });
 
   test('primary demo admin row stays intact for other suites', () => {

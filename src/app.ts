@@ -6,6 +6,7 @@ import { Hono } from 'hono';
 import { compress } from 'hono/compress';
 import { HTTPException } from 'hono/http-exception';
 import { secureHeaders } from 'hono/secure-headers';
+import type { OcrEngine } from '../shared/types.ts';
 import type { AppEnv } from './app-env.ts';
 import { defaultBackupDir } from './backup.ts';
 import { MAX_IMPORT_BYTES } from './csv.ts';
@@ -16,6 +17,7 @@ import { bodyLimit, rateLimit } from './middleware/limits.ts';
 import { requireSameOrigin, requireTrustedHost } from './middleware/security.ts';
 import { tokenQuota } from './middleware/token-quota.ts';
 import { contextIp, parseHosts, parseOrigins, safeEqual } from './net.ts';
+import type { OcrBench } from './ocr-bench.ts';
 import { openApiDocument } from './openapi.ts';
 import { PushSender } from './push.ts';
 import { activityRoutes } from './routes/activities.ts';
@@ -33,6 +35,9 @@ import { insightsRoutes } from './routes/insights.ts';
 import { integrationRoutes } from './routes/integrations.ts';
 import { knowledgeRoutes } from './routes/knowledge.ts';
 import { notificationRoutes } from './routes/notifications.ts';
+import { ocrGovernanceRoutes } from './routes/ocr-governance.ts';
+import { ocrLabRoutes } from './routes/ocr-lab.ts';
+import { ocrRegistryRoutes } from './routes/ocr-registry.ts';
 import { opsRoutes } from './routes/ops.ts';
 import { planningRoutes } from './routes/planning.ts';
 import { profileRoutes } from './routes/profile.ts';
@@ -68,6 +73,9 @@ export type AppOptions = {
   isReady?: () => boolean;
   push?: PushSender;
   backupDir?: string;
+  ocrWake?: () => void;
+  ocrModelPeek?: (engine: OcrEngine) => string | null;
+  ocrLab?: OcrBench;
 };
 
 const SCALAR_CDN = 'https://cdn.jsdelivr.net/npm/@scalar/api-reference@1.76.0';
@@ -228,6 +236,10 @@ export function createApp(store: Store, hub: EventHub, options: AppOptions = {})
           pattern: /^\/api\/documents\/[^/]+$/,
           bytes: 512 * 1024,
         },
+        {
+          pattern: /^\/api\/ocr\/calibration\/fit$/,
+          bytes: 4 * 1024 * 1024,
+        },
       ],
     }),
   );
@@ -309,6 +321,7 @@ export function createApp(store: Store, hub: EventHub, options: AppOptions = {})
       clients: hub.size,
       wsClients: options.wsHub?.size ?? 0,
       slowQueries: store.db.slowQueries,
+      ocr: databaseOk ? store.attachments.ocrStats() : null,
     };
     return ready ? c.json(payload) : c.json(payload, 503);
   });
@@ -336,6 +349,7 @@ export function createApp(store: Store, hub: EventHub, options: AppOptions = {})
         users: stats.users,
         sessions: stats.sessions,
         slowQueries: store.db.slowQueries,
+        ocr: store.attachments.ocrStats(),
       }),
       200,
       {
@@ -347,7 +361,16 @@ export function createApp(store: Store, hub: EventHub, options: AppOptions = {})
   app.route('/', authRoutes(store, hub, options.wsHub, trustProxy));
   app.route('/', dashboardRoutes(store));
   app.route('/', analyticsRoutes(store, trustProxy));
-  app.route('/', attachmentRoutes(store, trustProxy));
+  app.route(
+    '/',
+    attachmentRoutes(store, trustProxy, {
+      ocrWake: options.ocrWake,
+      ocrModelPeek: options.ocrModelPeek,
+    }),
+  );
+  app.route('/', ocrLabRoutes(options.ocrLab));
+  app.route('/', ocrRegistryRoutes(store, options.ocrLab));
+  app.route('/', ocrGovernanceRoutes(store, trustProxy));
   app.route(
     '/',
     pushRoutes(

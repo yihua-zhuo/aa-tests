@@ -11,6 +11,10 @@ services:
       PORT: "3000"
       DB_PATH: /app/data/pulse.db
       NODE_ENV: production
+      # Optional OCR sidecars (profile "ocr"). Empty by default; set them in
+      # .env to http://paddle:8765 / http://docling:8766 when the profile runs.
+      OCR_PADDLE_URL: ${OCR_PADDLE_URL:-}
+      OCR_DOCLING_URL: ${OCR_DOCLING_URL:-}
     ports:
       # Only expose to the host loopback; terminate TLS in front of this.
       - "127.0.0.1:3000:3000"
@@ -29,6 +33,61 @@ services:
       retries: 3
       start_period: 30s
     stop_grace_period: 20s
+    logging:
+      driver: json-file
+      options:
+        max-size: "10m"
+        max-file: "5"
+
+  # Optional OCR sidecars. They are internal-only (no published ports) and only
+  # start with `--profile ocr`. See deploy/ocr/README.md.
+  paddle:
+    profiles: ["ocr"]
+    build:
+      context: .
+      dockerfile: deploy/ocr/Dockerfile.paddle
+    image: pulse-ocr-paddle:local
+    restart: unless-stopped
+    environment:
+      OCR_TOKEN: ${OCR_TOKEN:-}
+    volumes:
+      # Read-only: the sidecar only needs to read stored uploads, never write.
+      - ./data:/app/data:ro
+    # Parsing untrusted files runs unprivileged, with no capabilities and a
+    # memory/CPU ceiling so one malformed upload cannot exhaust the host.
+    user: "10001:10001"
+    cap_drop:
+      - ALL
+    security_opt:
+      - no-new-privileges:true
+    mem_limit: 6g
+    cpus: 4
+    # Healthcheck is inherited from the image (HEALTHCHECK in Dockerfile.paddle).
+    logging:
+      driver: json-file
+      options:
+        max-size: "10m"
+        max-file: "5"
+
+  docling:
+    profiles: ["ocr"]
+    build:
+      context: .
+      dockerfile: deploy/ocr/Dockerfile.docling
+    image: pulse-ocr-docling:local
+    restart: unless-stopped
+    environment:
+      OCR_TOKEN: ${OCR_TOKEN:-}
+    volumes:
+      - ./data:/app/data:ro
+    user: "10001:10001"
+    cap_drop:
+      - ALL
+    security_opt:
+      - no-new-privileges:true
+    mem_limit: 8g
+    cpus: 4
+    # Healthcheck is inherited from the image (HEALTHCHECK in Dockerfile.docling).
     logging:
       driver: json-file
       options:

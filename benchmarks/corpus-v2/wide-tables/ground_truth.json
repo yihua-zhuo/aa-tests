@@ -1,0 +1,1397 @@
+{
+  "wide_inventory_clean.png": {
+    "conditions": {
+      "mode": "structure"
+    },
+    "degradations": ["wide_table", "merged_cells", "empty_cells", "dense_text"],
+    "difficulty": "moderate",
+    "fields": {
+      "amount": "11,960.00",
+      "product": "WIRELESS HEADSET",
+      "quantity": "21",
+      "sku": "A-1001",
+      "total": "21,550.00",
+      "unit_price": "5,980.00"
+    },
+    "keywords": [
+      "WIDE INVENTORY TABLE",
+      "WAREHOUSE 07",
+      "WIRELESS HEADSET",
+      "21,550.00",
+      "BACKORDER",
+      "MONITOR STAND"
+    ],
+    "kind": "table",
+    "lang": "en",
+    "provenance": {
+      "annotatedAt": "2026-10-31T00:00:00Z",
+      "annotator": "synthetic-generator",
+      "sha256": "612a1c716e03d9e7d0123e350079c0dfa92e7bc089438dd74a6932b750d178b9",
+      "source": "scripts/generate_wide_table_corpus.py"
+    },
+    "tables": [
+      {
+        "cells": [
+          {
+            "column": 0,
+            "columnSpan": 3,
+            "row": 0,
+            "rowSpan": 1,
+            "text": "PRODUCT"
+          },
+          {
+            "column": 3,
+            "columnSpan": 3,
+            "row": 0,
+            "rowSpan": 1,
+            "text": "SUPPLY"
+          },
+          {
+            "column": 6,
+            "columnSpan": 3,
+            "row": 0,
+            "rowSpan": 1,
+            "text": "PRICING"
+          },
+          {
+            "column": 9,
+            "columnSpan": 3,
+            "row": 0,
+            "rowSpan": 1,
+            "text": "STATUS"
+          },
+          {
+            "column": 0,
+            "columnSpan": 6,
+            "row": 10,
+            "rowSpan": 1,
+            "text": "TOTAL"
+          }
+        ],
+        "rows": [
+          ["PRODUCT", "", "", "SUPPLY", "", "", "PRICING", "", "", "STATUS", "", ""],
+          [
+            "SKU",
+            "DESCRIPTION",
+            "CATEGORY",
+            "WAREHOUSE",
+            "ON HAND",
+            "REORDER",
+            "QTY",
+            "UNIT PRICE",
+            "AMOUNT",
+            "LEAD",
+            "SUPPLIER",
+            "NOTE"
+          ],
+          [
+            "A-1001",
+            "WIRELESS HEADSET",
+            "AUDIO",
+            "EAST",
+            "42",
+            "10",
+            "2",
+            "5,980.00",
+            "11,960.00",
+            "5",
+            "ACME",
+            ""
+          ],
+          [
+            "A-1002",
+            "DOCKING STATION",
+            "ACCESSORY",
+            "EAST",
+            "18",
+            "6",
+            "1",
+            "2,450.00",
+            "2,450.00",
+            "7",
+            "ACME",
+            ""
+          ],
+          [
+            "A-1003",
+            "USB-C CABLE 2M",
+            "CABLE",
+            "SOUTH",
+            "240",
+            "80",
+            "4",
+            "120.00",
+            "480.00",
+            "3",
+            "BETA",
+            ""
+          ],
+          [
+            "A-1004",
+            "MONITOR STAND",
+            "ACCESSORY",
+            "WEST",
+            "0",
+            "12",
+            "",
+            "890.00",
+            "",
+            "14",
+            "GAMMA",
+            "BACKORDER"
+          ],
+          [
+            "A-1005",
+            "WEBCAM 1080P",
+            "VIDEO",
+            "EAST",
+            "35",
+            "15",
+            "3",
+            "1,280.00",
+            "3,840.00",
+            "6",
+            "ACME",
+            ""
+          ],
+          [
+            "A-1006",
+            "KEYBOARD",
+            "INPUT",
+            "NORTH",
+            "76",
+            "20",
+            "5",
+            "450.00",
+            "2,250.00",
+            "4",
+            "DELTA",
+            ""
+          ],
+          [
+            "A-1007",
+            "HEADSET STAND",
+            "AUDIO",
+            "SOUTH",
+            "54",
+            "10",
+            "",
+            "320.00",
+            "",
+            "9",
+            "BETA",
+            ""
+          ],
+          [
+            "A-1008",
+            "HDMI CABLE 3M",
+            "CABLE",
+            "WEST",
+            "120",
+            "40",
+            "6",
+            "95.00",
+            "570.00",
+            "3",
+            "GAMMA",
+            ""
+          ],
+          ["TOTAL", "", "", "", "", "", "21", "", "21,550.00", "", "", ""]
+        ]
+      }
+    ],
+    "text": "WIDE INVENTORY TABLE - WAREHOUSE 07 PERIOD 2026 Q3 - CURRENCY USD PRODUCT SUPPLY PRICING STATUS SKU DESCRIPTION CATEGORY WAREHOUSE ON HAND REORDER QTY UNIT PRICE AMOUNT LEAD SUPPLIER NOTE A-1001 WIRELESS HEADSET AUDIO EAST 42 10 2 5,980.00 11,960.00 5 ACME A-1002 DOCKING STATION ACCESSORY EAST 18 6 1 2,450.00 2,450.00 7 ACME A-1003 USB-C CABLE 2M CABLE SOUTH 240 80 4 120.00 480.00 3 BETA A-1004 MONITOR STAND ACCESSORY WEST 0 12 890.00 14 GAMMA BACKORDER A-1005 WEBCAM 1080P VIDEO EAST 35 15 3 1,280.00 3,840.00 6 ACME A-1006 KEYBOARD INPUT NORTH 76 20 5 450.00 2,250.00 4 DELTA A-1007 HEADSET STAND AUDIO SOUTH 54 10 320.00 9 BETA A-1008 HDMI CABLE 3M CABLE WEST 120 40 6 95.00 570.00 3 GAMMA TOTAL 21 21,550.00 PRICES INCLUDE STANDARD DISCOUNT. VERIFY BACKORDER LINES."
+  },
+  "wide_inventory_skew.png": {
+    "conditions": {
+      "mode": "structure"
+    },
+    "degradations": [
+      "wide_table",
+      "merged_cells",
+      "empty_cells",
+      "dense_text",
+      "rotation",
+      "skew",
+      "noise"
+    ],
+    "difficulty": "moderate",
+    "fields": {
+      "amount": "11,960.00",
+      "product": "WIRELESS HEADSET",
+      "quantity": "21",
+      "sku": "A-1001",
+      "total": "21,550.00",
+      "unit_price": "5,980.00"
+    },
+    "keywords": [
+      "WIDE INVENTORY TABLE",
+      "WAREHOUSE 07",
+      "WIRELESS HEADSET",
+      "21,550.00",
+      "BACKORDER",
+      "MONITOR STAND"
+    ],
+    "kind": "table",
+    "lang": "en",
+    "provenance": {
+      "annotatedAt": "2026-10-31T00:00:00Z",
+      "annotator": "synthetic-generator",
+      "sha256": "1a652007e72de138f07209f2f183937958fef1de069376e4609879c1779a1dec",
+      "source": "scripts/generate_wide_table_corpus.py"
+    },
+    "tables": [
+      {
+        "cells": [
+          {
+            "column": 0,
+            "columnSpan": 3,
+            "row": 0,
+            "rowSpan": 1,
+            "text": "PRODUCT"
+          },
+          {
+            "column": 3,
+            "columnSpan": 3,
+            "row": 0,
+            "rowSpan": 1,
+            "text": "SUPPLY"
+          },
+          {
+            "column": 6,
+            "columnSpan": 3,
+            "row": 0,
+            "rowSpan": 1,
+            "text": "PRICING"
+          },
+          {
+            "column": 9,
+            "columnSpan": 3,
+            "row": 0,
+            "rowSpan": 1,
+            "text": "STATUS"
+          },
+          {
+            "column": 0,
+            "columnSpan": 6,
+            "row": 10,
+            "rowSpan": 1,
+            "text": "TOTAL"
+          }
+        ],
+        "rows": [
+          ["PRODUCT", "", "", "SUPPLY", "", "", "PRICING", "", "", "STATUS", "", ""],
+          [
+            "SKU",
+            "DESCRIPTION",
+            "CATEGORY",
+            "WAREHOUSE",
+            "ON HAND",
+            "REORDER",
+            "QTY",
+            "UNIT PRICE",
+            "AMOUNT",
+            "LEAD",
+            "SUPPLIER",
+            "NOTE"
+          ],
+          [
+            "A-1001",
+            "WIRELESS HEADSET",
+            "AUDIO",
+            "EAST",
+            "42",
+            "10",
+            "2",
+            "5,980.00",
+            "11,960.00",
+            "5",
+            "ACME",
+            ""
+          ],
+          [
+            "A-1002",
+            "DOCKING STATION",
+            "ACCESSORY",
+            "EAST",
+            "18",
+            "6",
+            "1",
+            "2,450.00",
+            "2,450.00",
+            "7",
+            "ACME",
+            ""
+          ],
+          [
+            "A-1003",
+            "USB-C CABLE 2M",
+            "CABLE",
+            "SOUTH",
+            "240",
+            "80",
+            "4",
+            "120.00",
+            "480.00",
+            "3",
+            "BETA",
+            ""
+          ],
+          [
+            "A-1004",
+            "MONITOR STAND",
+            "ACCESSORY",
+            "WEST",
+            "0",
+            "12",
+            "",
+            "890.00",
+            "",
+            "14",
+            "GAMMA",
+            "BACKORDER"
+          ],
+          [
+            "A-1005",
+            "WEBCAM 1080P",
+            "VIDEO",
+            "EAST",
+            "35",
+            "15",
+            "3",
+            "1,280.00",
+            "3,840.00",
+            "6",
+            "ACME",
+            ""
+          ],
+          [
+            "A-1006",
+            "KEYBOARD",
+            "INPUT",
+            "NORTH",
+            "76",
+            "20",
+            "5",
+            "450.00",
+            "2,250.00",
+            "4",
+            "DELTA",
+            ""
+          ],
+          [
+            "A-1007",
+            "HEADSET STAND",
+            "AUDIO",
+            "SOUTH",
+            "54",
+            "10",
+            "",
+            "320.00",
+            "",
+            "9",
+            "BETA",
+            ""
+          ],
+          [
+            "A-1008",
+            "HDMI CABLE 3M",
+            "CABLE",
+            "WEST",
+            "120",
+            "40",
+            "6",
+            "95.00",
+            "570.00",
+            "3",
+            "GAMMA",
+            ""
+          ],
+          ["TOTAL", "", "", "", "", "", "21", "", "21,550.00", "", "", ""]
+        ]
+      }
+    ],
+    "text": "WIDE INVENTORY TABLE - WAREHOUSE 07 PERIOD 2026 Q3 - CURRENCY USD PRODUCT SUPPLY PRICING STATUS SKU DESCRIPTION CATEGORY WAREHOUSE ON HAND REORDER QTY UNIT PRICE AMOUNT LEAD SUPPLIER NOTE A-1001 WIRELESS HEADSET AUDIO EAST 42 10 2 5,980.00 11,960.00 5 ACME A-1002 DOCKING STATION ACCESSORY EAST 18 6 1 2,450.00 2,450.00 7 ACME A-1003 USB-C CABLE 2M CABLE SOUTH 240 80 4 120.00 480.00 3 BETA A-1004 MONITOR STAND ACCESSORY WEST 0 12 890.00 14 GAMMA BACKORDER A-1005 WEBCAM 1080P VIDEO EAST 35 15 3 1,280.00 3,840.00 6 ACME A-1006 KEYBOARD INPUT NORTH 76 20 5 450.00 2,250.00 4 DELTA A-1007 HEADSET STAND AUDIO SOUTH 54 10 320.00 9 BETA A-1008 HDMI CABLE 3M CABLE WEST 120 40 6 95.00 570.00 3 GAMMA TOTAL 21 21,550.00 PRICES INCLUDE STANDARD DISCOUNT. VERIFY BACKORDER LINES."
+  },
+  "wide_ledger_clean.png": {
+    "conditions": {
+      "mode": "structure"
+    },
+    "degradations": ["wide_table", "merged_cells", "empty_cells", "dense_text"],
+    "difficulty": "moderate",
+    "fields": {
+      "account": "CASH",
+      "account_code": "1000",
+      "closing_balance": "136,250.00",
+      "period": "2026-10",
+      "total_closing": "704,000.00",
+      "total_credit": "32,350.00",
+      "total_debit": "256,100.00"
+    },
+    "keywords": [
+      "WIDE GENERAL LEDGER",
+      "MULTI-LEVEL HEADERS",
+      "RECEIVABLES",
+      "704,000.00",
+      "256,100.00",
+      "REVIEW"
+    ],
+    "kind": "table",
+    "lang": "en",
+    "provenance": {
+      "annotatedAt": "2026-10-31T00:00:00Z",
+      "annotator": "synthetic-generator",
+      "sha256": "ef218c00550d9fd6ccca601293eeb84d671c8c6594942e96f8cfbf031b29a9bc",
+      "source": "scripts/generate_wide_table_corpus.py"
+    },
+    "tables": [
+      {
+        "cells": [
+          {
+            "column": 0,
+            "columnSpan": 4,
+            "row": 0,
+            "rowSpan": 1,
+            "text": "ACCOUNT"
+          },
+          {
+            "column": 4,
+            "columnSpan": 3,
+            "row": 0,
+            "rowSpan": 1,
+            "text": "PERIOD"
+          },
+          {
+            "column": 7,
+            "columnSpan": 4,
+            "row": 0,
+            "rowSpan": 1,
+            "text": "BALANCE"
+          },
+          {
+            "column": 11,
+            "columnSpan": 3,
+            "row": 0,
+            "rowSpan": 1,
+            "text": "REVIEW"
+          },
+          {
+            "column": 0,
+            "columnSpan": 4,
+            "row": 10,
+            "rowSpan": 1,
+            "text": "TOTAL"
+          }
+        ],
+        "rows": [
+          ["ACCOUNT", "", "", "", "PERIOD", "", "", "BALANCE", "", "", "", "REVIEW", "", ""],
+          [
+            "CODE",
+            "NAME",
+            "TYPE",
+            "CURRENCY",
+            "OPENING",
+            "DEBIT",
+            "CREDIT",
+            "CLOSING",
+            "AVAILABLE",
+            "HOLD",
+            "STATUS",
+            "OWNER",
+            "DATE",
+            "FLAG"
+          ],
+          [
+            "1000",
+            "CASH",
+            "ASSET",
+            "USD",
+            "125,000.00",
+            "18,500.00",
+            "7,250.00",
+            "136,250.00",
+            "136,250.00",
+            "0.00",
+            "OPEN",
+            "FIN",
+            "2026-10-31",
+            ""
+          ],
+          [
+            "1100",
+            "RECEIVABLES",
+            "ASSET",
+            "USD",
+            "84,300.00",
+            "12,400.00",
+            "9,800.00",
+            "86,900.00",
+            "81,900.00",
+            "5,000.00",
+            "HOLD",
+            "FIN",
+            "2026-10-30",
+            "REVIEW"
+          ],
+          [
+            "2000",
+            "PAYABLES",
+            "LIAB",
+            "USD",
+            "42,750.00",
+            "6,200.00",
+            "15,300.00",
+            "51,850.00",
+            "51,850.00",
+            "0.00",
+            "OPEN",
+            "OPS",
+            "2026-10-31",
+            ""
+          ],
+          [
+            "3000",
+            "EQUITY",
+            "EQUITY",
+            "USD",
+            "210,000.00",
+            "0.00",
+            "0.00",
+            "210,000.00",
+            "210,000.00",
+            "0.00",
+            "OPEN",
+            "FIN",
+            "2026-10-29",
+            ""
+          ],
+          [
+            "4000",
+            "REVENUE",
+            "INCOME",
+            "USD",
+            "0.00",
+            "128,500.00",
+            "0.00",
+            "128,500.00",
+            "128,500.00",
+            "0.00",
+            "OPEN",
+            "SALES",
+            "2026-10-31",
+            ""
+          ],
+          [
+            "5000",
+            "COGS",
+            "EXPENSE",
+            "USD",
+            "0.00",
+            "64,250.00",
+            "0.00",
+            "64,250.00",
+            "64,250.00",
+            "0.00",
+            "OPEN",
+            "OPS",
+            "2026-10-31",
+            ""
+          ],
+          [
+            "6000",
+            "PAYROLL",
+            "EXPENSE",
+            "USD",
+            "0.00",
+            "22,800.00",
+            "0.00",
+            "22,800.00",
+            "20,300.00",
+            "2,500.00",
+            "HOLD",
+            "HR",
+            "2026-10-28",
+            "CHECK"
+          ],
+          [
+            "7000",
+            "TRAVEL",
+            "EXPENSE",
+            "USD",
+            "0.00",
+            "3,450.00",
+            "0.00",
+            "3,450.00",
+            "3,450.00",
+            "0.00",
+            "OPEN",
+            "OPS",
+            "2026-10-27",
+            ""
+          ],
+          [
+            "TOTAL",
+            "",
+            "",
+            "",
+            "462,050.00",
+            "256,100.00",
+            "32,350.00",
+            "704,000.00",
+            "",
+            "",
+            "",
+            "",
+            "",
+            ""
+          ]
+        ]
+      }
+    ],
+    "text": "WIDE GENERAL LEDGER - MULTI-LEVEL HEADERS PERIOD 2026-10 - CURRENCY USD - ALL AMOUNTS ROUNDED ACCOUNT PERIOD BALANCE REVIEW CODE NAME TYPE CURRENCY OPENING DEBIT CREDIT CLOSING AVAILABLE HOLD STATUS OWNER DATE FLAG 1000 CASH ASSET USD 125,000.00 18,500.00 7,250.00 136,250.00 136,250.00 0.00 OPEN FIN 2026-10-31 1100 RECEIVABLES ASSET USD 84,300.00 12,400.00 9,800.00 86,900.00 81,900.00 5,000.00 HOLD FIN 2026-10-30 REVIEW 2000 PAYABLES LIAB USD 42,750.00 6,200.00 15,300.00 51,850.00 51,850.00 0.00 OPEN OPS 2026-10-31 3000 EQUITY EQUITY USD 210,000.00 0.00 0.00 210,000.00 210,000.00 0.00 OPEN FIN 2026-10-29 4000 REVENUE INCOME USD 0.00 128,500.00 0.00 128,500.00 128,500.00 0.00 OPEN SALES 2026-10-31 5000 COGS EXPENSE USD 0.00 64,250.00 0.00 64,250.00 64,250.00 0.00 OPEN OPS 2026-10-31 6000 PAYROLL EXPENSE USD 0.00 22,800.00 0.00 22,800.00 20,300.00 2,500.00 HOLD HR 2026-10-28 CHECK 7000 TRAVEL EXPENSE USD 0.00 3,450.00 0.00 3,450.00 3,450.00 0.00 OPEN OPS 2026-10-27 TOTAL 462,050.00 256,100.00 32,350.00 704,000.00 HOLD AMOUNTS REQUIRE REVIEW BEFORE PERIOD CLOSE."
+  },
+  "wide_ledger_skew.png": {
+    "conditions": {
+      "mode": "structure"
+    },
+    "degradations": [
+      "wide_table",
+      "merged_cells",
+      "empty_cells",
+      "dense_text",
+      "rotation",
+      "skew",
+      "noise"
+    ],
+    "difficulty": "moderate",
+    "fields": {
+      "account": "CASH",
+      "account_code": "1000",
+      "closing_balance": "136,250.00",
+      "period": "2026-10",
+      "total_closing": "704,000.00",
+      "total_credit": "32,350.00",
+      "total_debit": "256,100.00"
+    },
+    "keywords": [
+      "WIDE GENERAL LEDGER",
+      "MULTI-LEVEL HEADERS",
+      "RECEIVABLES",
+      "704,000.00",
+      "256,100.00",
+      "REVIEW"
+    ],
+    "kind": "table",
+    "lang": "en",
+    "provenance": {
+      "annotatedAt": "2026-10-31T00:00:00Z",
+      "annotator": "synthetic-generator",
+      "sha256": "871db75de1aa7753ac7a0060f7b175ae2af90cb92fa4428726ad539bbd944986",
+      "source": "scripts/generate_wide_table_corpus.py"
+    },
+    "tables": [
+      {
+        "cells": [
+          {
+            "column": 0,
+            "columnSpan": 4,
+            "row": 0,
+            "rowSpan": 1,
+            "text": "ACCOUNT"
+          },
+          {
+            "column": 4,
+            "columnSpan": 3,
+            "row": 0,
+            "rowSpan": 1,
+            "text": "PERIOD"
+          },
+          {
+            "column": 7,
+            "columnSpan": 4,
+            "row": 0,
+            "rowSpan": 1,
+            "text": "BALANCE"
+          },
+          {
+            "column": 11,
+            "columnSpan": 3,
+            "row": 0,
+            "rowSpan": 1,
+            "text": "REVIEW"
+          },
+          {
+            "column": 0,
+            "columnSpan": 4,
+            "row": 10,
+            "rowSpan": 1,
+            "text": "TOTAL"
+          }
+        ],
+        "rows": [
+          ["ACCOUNT", "", "", "", "PERIOD", "", "", "BALANCE", "", "", "", "REVIEW", "", ""],
+          [
+            "CODE",
+            "NAME",
+            "TYPE",
+            "CURRENCY",
+            "OPENING",
+            "DEBIT",
+            "CREDIT",
+            "CLOSING",
+            "AVAILABLE",
+            "HOLD",
+            "STATUS",
+            "OWNER",
+            "DATE",
+            "FLAG"
+          ],
+          [
+            "1000",
+            "CASH",
+            "ASSET",
+            "USD",
+            "125,000.00",
+            "18,500.00",
+            "7,250.00",
+            "136,250.00",
+            "136,250.00",
+            "0.00",
+            "OPEN",
+            "FIN",
+            "2026-10-31",
+            ""
+          ],
+          [
+            "1100",
+            "RECEIVABLES",
+            "ASSET",
+            "USD",
+            "84,300.00",
+            "12,400.00",
+            "9,800.00",
+            "86,900.00",
+            "81,900.00",
+            "5,000.00",
+            "HOLD",
+            "FIN",
+            "2026-10-30",
+            "REVIEW"
+          ],
+          [
+            "2000",
+            "PAYABLES",
+            "LIAB",
+            "USD",
+            "42,750.00",
+            "6,200.00",
+            "15,300.00",
+            "51,850.00",
+            "51,850.00",
+            "0.00",
+            "OPEN",
+            "OPS",
+            "2026-10-31",
+            ""
+          ],
+          [
+            "3000",
+            "EQUITY",
+            "EQUITY",
+            "USD",
+            "210,000.00",
+            "0.00",
+            "0.00",
+            "210,000.00",
+            "210,000.00",
+            "0.00",
+            "OPEN",
+            "FIN",
+            "2026-10-29",
+            ""
+          ],
+          [
+            "4000",
+            "REVENUE",
+            "INCOME",
+            "USD",
+            "0.00",
+            "128,500.00",
+            "0.00",
+            "128,500.00",
+            "128,500.00",
+            "0.00",
+            "OPEN",
+            "SALES",
+            "2026-10-31",
+            ""
+          ],
+          [
+            "5000",
+            "COGS",
+            "EXPENSE",
+            "USD",
+            "0.00",
+            "64,250.00",
+            "0.00",
+            "64,250.00",
+            "64,250.00",
+            "0.00",
+            "OPEN",
+            "OPS",
+            "2026-10-31",
+            ""
+          ],
+          [
+            "6000",
+            "PAYROLL",
+            "EXPENSE",
+            "USD",
+            "0.00",
+            "22,800.00",
+            "0.00",
+            "22,800.00",
+            "20,300.00",
+            "2,500.00",
+            "HOLD",
+            "HR",
+            "2026-10-28",
+            "CHECK"
+          ],
+          [
+            "7000",
+            "TRAVEL",
+            "EXPENSE",
+            "USD",
+            "0.00",
+            "3,450.00",
+            "0.00",
+            "3,450.00",
+            "3,450.00",
+            "0.00",
+            "OPEN",
+            "OPS",
+            "2026-10-27",
+            ""
+          ],
+          [
+            "TOTAL",
+            "",
+            "",
+            "",
+            "462,050.00",
+            "256,100.00",
+            "32,350.00",
+            "704,000.00",
+            "",
+            "",
+            "",
+            "",
+            "",
+            ""
+          ]
+        ]
+      }
+    ],
+    "text": "WIDE GENERAL LEDGER - MULTI-LEVEL HEADERS PERIOD 2026-10 - CURRENCY USD - ALL AMOUNTS ROUNDED ACCOUNT PERIOD BALANCE REVIEW CODE NAME TYPE CURRENCY OPENING DEBIT CREDIT CLOSING AVAILABLE HOLD STATUS OWNER DATE FLAG 1000 CASH ASSET USD 125,000.00 18,500.00 7,250.00 136,250.00 136,250.00 0.00 OPEN FIN 2026-10-31 1100 RECEIVABLES ASSET USD 84,300.00 12,400.00 9,800.00 86,900.00 81,900.00 5,000.00 HOLD FIN 2026-10-30 REVIEW 2000 PAYABLES LIAB USD 42,750.00 6,200.00 15,300.00 51,850.00 51,850.00 0.00 OPEN OPS 2026-10-31 3000 EQUITY EQUITY USD 210,000.00 0.00 0.00 210,000.00 210,000.00 0.00 OPEN FIN 2026-10-29 4000 REVENUE INCOME USD 0.00 128,500.00 0.00 128,500.00 128,500.00 0.00 OPEN SALES 2026-10-31 5000 COGS EXPENSE USD 0.00 64,250.00 0.00 64,250.00 64,250.00 0.00 OPEN OPS 2026-10-31 6000 PAYROLL EXPENSE USD 0.00 22,800.00 0.00 22,800.00 20,300.00 2,500.00 HOLD HR 2026-10-28 CHECK 7000 TRAVEL EXPENSE USD 0.00 3,450.00 0.00 3,450.00 3,450.00 0.00 OPEN OPS 2026-10-27 TOTAL 462,050.00 256,100.00 32,350.00 704,000.00 HOLD AMOUNTS REQUIRE REVIEW BEFORE PERIOD CLOSE."
+  },
+  "wide_order_continuation.png": {
+    "conditions": {
+      "mode": "structure"
+    },
+    "degradations": [
+      "wide_table",
+      "merged_cells",
+      "empty_cells",
+      "dense_text",
+      "page_continuation",
+      "repeated_header"
+    ],
+    "difficulty": "severe",
+    "fields": {
+      "continuation_order": "PO-2026-8842",
+      "order": "PO-2026-8841",
+      "page_1_total": "22,549.85",
+      "page_2_total": "7,286.40",
+      "quantity": "113",
+      "total": "29,836.25"
+    },
+    "keywords": [
+      "PURCHASE ORDER CONTINUATION",
+      "PAGE BREAK",
+      "PO-2026-8841",
+      "PO-2026-8842",
+      "29,836.25",
+      "22,549.85",
+      "7,286.40"
+    ],
+    "kind": "table",
+    "lang": "en",
+    "provenance": {
+      "annotatedAt": "2026-10-31T00:00:00Z",
+      "annotator": "synthetic-generator",
+      "sha256": "3cd3c0e68829675be607d5b63105deb04e56677643a493c3252d440caa6aa5eb",
+      "source": "scripts/generate_wide_table_corpus.py"
+    },
+    "tables": [
+      {
+        "cells": [
+          {
+            "column": 0,
+            "columnSpan": 2,
+            "row": 0,
+            "rowSpan": 1,
+            "text": "ORDER"
+          },
+          {
+            "column": 2,
+            "columnSpan": 2,
+            "row": 0,
+            "rowSpan": 1,
+            "text": "PRODUCT"
+          },
+          {
+            "column": 4,
+            "columnSpan": 2,
+            "row": 0,
+            "rowSpan": 1,
+            "text": "QUANTITY"
+          },
+          {
+            "column": 6,
+            "columnSpan": 3,
+            "row": 0,
+            "rowSpan": 1,
+            "text": "PRICE"
+          },
+          {
+            "column": 9,
+            "columnSpan": 3,
+            "row": 0,
+            "rowSpan": 1,
+            "text": "AMOUNT"
+          },
+          {
+            "column": 0,
+            "columnSpan": 4,
+            "row": 8,
+            "rowSpan": 1,
+            "text": "PAGE TOTAL"
+          }
+        ],
+        "rows": [
+          ["ORDER", "", "PRODUCT", "", "QUANTITY", "", "PRICE", "", "", "AMOUNT", "", ""],
+          [
+            "PO",
+            "SKU",
+            "DESCRIPTION",
+            "DEPT",
+            "QTY",
+            "UOM",
+            "UNIT PRICE",
+            "DISC %",
+            "NET PRICE",
+            "TAX",
+            "AMOUNT",
+            "NOTE"
+          ],
+          [
+            "PO-2026-8841",
+            "A-1001",
+            "WIRELESS HEADSET",
+            "IT",
+            "2",
+            "EA",
+            "5,980.00",
+            "0",
+            "5,980.00",
+            "598.00",
+            "12,558.00",
+            ""
+          ],
+          [
+            "PO-2026-8841",
+            "A-1002",
+            "DOCKING STATION",
+            "IT",
+            "1",
+            "EA",
+            "2,450.00",
+            "5",
+            "2,327.50",
+            "232.75",
+            "2,560.25",
+            ""
+          ],
+          [
+            "PO-2026-8841",
+            "A-1003",
+            "USB-C CABLE 2M",
+            "OPS",
+            "4",
+            "EA",
+            "120.00",
+            "0",
+            "120.00",
+            "48.00",
+            "528.00",
+            ""
+          ],
+          [
+            "PO-2026-8841",
+            "A-1005",
+            "WEBCAM 1080P",
+            "IT",
+            "3",
+            "EA",
+            "1,280.00",
+            "10",
+            "1,152.00",
+            "345.60",
+            "3,801.60",
+            ""
+          ],
+          [
+            "PO-2026-8841",
+            "A-1006",
+            "KEYBOARD",
+            "OPS",
+            "5",
+            "EA",
+            "450.00",
+            "0",
+            "450.00",
+            "225.00",
+            "2,475.00",
+            ""
+          ],
+          [
+            "PO-2026-8841",
+            "A-1008",
+            "HDMI CABLE 3M",
+            "OPS",
+            "6",
+            "EA",
+            "95.00",
+            "0",
+            "95.00",
+            "57.00",
+            "627.00",
+            ""
+          ],
+          ["PAGE TOTAL", "", "", "", "21", "", "", "", "", "", "22,549.85", ""]
+        ]
+      },
+      {
+        "cells": [
+          {
+            "column": 0,
+            "columnSpan": 2,
+            "row": 0,
+            "rowSpan": 1,
+            "text": "ORDER"
+          },
+          {
+            "column": 2,
+            "columnSpan": 2,
+            "row": 0,
+            "rowSpan": 1,
+            "text": "PRODUCT"
+          },
+          {
+            "column": 4,
+            "columnSpan": 2,
+            "row": 0,
+            "rowSpan": 1,
+            "text": "QUANTITY"
+          },
+          {
+            "column": 6,
+            "columnSpan": 3,
+            "row": 0,
+            "rowSpan": 1,
+            "text": "PRICE"
+          },
+          {
+            "column": 9,
+            "columnSpan": 3,
+            "row": 0,
+            "rowSpan": 1,
+            "text": "AMOUNT"
+          },
+          {
+            "column": 0,
+            "columnSpan": 4,
+            "row": 8,
+            "rowSpan": 1,
+            "text": "PAGE TOTAL"
+          }
+        ],
+        "rows": [
+          ["ORDER", "", "PRODUCT", "", "QUANTITY", "", "PRICE", "", "", "AMOUNT", "", ""],
+          [
+            "PO",
+            "SKU",
+            "DESCRIPTION",
+            "DEPT",
+            "QTY",
+            "UOM",
+            "UNIT PRICE",
+            "DISC %",
+            "NET PRICE",
+            "TAX",
+            "AMOUNT",
+            "NOTE"
+          ],
+          [
+            "PO-2026-8842",
+            "A-1004",
+            "MONITOR STAND",
+            "OPS",
+            "2",
+            "EA",
+            "890.00",
+            "0",
+            "890.00",
+            "178.00",
+            "1,958.00",
+            ""
+          ],
+          [
+            "PO-2026-8842",
+            "A-1007",
+            "HEADSET STAND",
+            "IT",
+            "3",
+            "EA",
+            "320.00",
+            "5",
+            "304.00",
+            "91.20",
+            "1,003.20",
+            ""
+          ],
+          [
+            "PO-2026-8842",
+            "B-2001",
+            "LABEL PRINTER",
+            "OPS",
+            "1",
+            "EA",
+            "3,450.00",
+            "0",
+            "3,450.00",
+            "345.00",
+            "3,795.00",
+            ""
+          ],
+          [
+            "PO-2026-8842",
+            "B-2002",
+            "THERMAL ROLL",
+            "OPS",
+            "12",
+            "RL",
+            "18.00",
+            "0",
+            "18.00",
+            "21.60",
+            "237.60",
+            ""
+          ],
+          [
+            "PO-2026-8842",
+            "B-2003",
+            "PACKING TAPE",
+            "OPS",
+            "24",
+            "RL",
+            "6.50",
+            "0",
+            "6.50",
+            "15.60",
+            "171.60",
+            ""
+          ],
+          [
+            "PO-2026-8842",
+            "B-2004",
+            "SHIPPING BOX",
+            "OPS",
+            "50",
+            "EA",
+            "2.20",
+            "0",
+            "2.20",
+            "11.00",
+            "121.00",
+            ""
+          ],
+          ["PAGE TOTAL", "", "", "", "92", "", "", "", "", "", "7,286.40", ""]
+        ]
+      }
+    ],
+    "text": "PURCHASE ORDER CONTINUATION - PAGE 1 OF 2 HEADER REPEATS AFTER THE PAGE BREAK - CURRENCY USD ORDER PRODUCT QUANTITY PRICE AMOUNT PO SKU DESCRIPTION DEPT QTY UOM UNIT PRICE DISC % NET PRICE TAX AMOUNT NOTE PO-2026-8841 A-1001 WIRELESS HEADSET IT 2 EA 5,980.00 0 5,980.00 598.00 12,558.00 PO-2026-8841 A-1002 DOCKING STATION IT 1 EA 2,450.00 5 2,327.50 232.75 2,560.25 PO-2026-8841 A-1003 USB-C CABLE 2M OPS 4 EA 120.00 0 120.00 48.00 528.00 PO-2026-8841 A-1005 WEBCAM 1080P IT 3 EA 1,280.00 10 1,152.00 345.60 3,801.60 PO-2026-8841 A-1006 KEYBOARD OPS 5 EA 450.00 0 450.00 225.00 2,475.00 PO-2026-8841 A-1008 HDMI CABLE 3M OPS 6 EA 95.00 0 95.00 57.00 627.00 PAGE TOTAL 21 22,549.85 PAGE BREAK - CONTINUED ON PAGE 2 - HEADER REPEATS BELOW PURCHASE ORDER CONTINUATION - PAGE 2 OF 2 HEADER REPEATED - CURRENCY USD ORDER PRODUCT QUANTITY PRICE AMOUNT PO SKU DESCRIPTION DEPT QTY UOM UNIT PRICE DISC % NET PRICE TAX AMOUNT NOTE PO-2026-8842 A-1004 MONITOR STAND OPS 2 EA 890.00 0 890.00 178.00 1,958.00 PO-2026-8842 A-1007 HEADSET STAND IT 3 EA 320.00 5 304.00 91.20 1,003.20 PO-2026-8842 B-2001 LABEL PRINTER OPS 1 EA 3,450.00 0 3,450.00 345.00 3,795.00 PO-2026-8842 B-2002 THERMAL ROLL OPS 12 RL 18.00 0 18.00 21.60 237.60 PO-2026-8842 B-2003 PACKING TAPE OPS 24 RL 6.50 0 6.50 15.60 171.60 PO-2026-8842 B-2004 SHIPPING BOX OPS 50 EA 2.20 0 2.20 11.00 121.00 PAGE TOTAL 92 7,286.40 GRAND TOTAL 29,836.25 - TOTAL QUANTITY 113 SIGNED OFF BY PROCUREMENT OPERATIONS ON 2026-10-31"
+  },
+  "wide_tables.pdf": {
+    "conditions": {
+      "mode": "structure"
+    },
+    "degradations": ["wide_table", "merged_cells", "dense_text", "text_layer"],
+    "difficulty": "moderate",
+    "fields": {
+      "amount": "4,853.42",
+      "order": "PO-2026-8842",
+      "quantity": "125",
+      "supplier_item": "LABEL PRINTER",
+      "total": "4,853.42"
+    },
+    "keywords": [
+      "WIDE TABLE",
+      "QUARTERLY SUPPLY SUMMARY",
+      "PO-2026-8842",
+      "LABEL PRINTER",
+      "4,853.42"
+    ],
+    "kind": "table",
+    "lang": "en",
+    "provenance": {
+      "annotatedAt": "2026-10-31T00:00:00Z",
+      "annotator": "synthetic-generator",
+      "sha256": "68473215ff05e4e5590ce8b0156b07a7b1da911dfc9453cfd99b1ea14d3719b6",
+      "source": "scripts/generate_wide_table_corpus.py"
+    },
+    "tables": [
+      {
+        "cells": [
+          {
+            "column": 0,
+            "columnSpan": 2,
+            "row": 0,
+            "rowSpan": 1,
+            "text": "ORDER"
+          },
+          {
+            "column": 2,
+            "columnSpan": 2,
+            "row": 0,
+            "rowSpan": 1,
+            "text": "PRODUCT"
+          },
+          {
+            "column": 4,
+            "columnSpan": 2,
+            "row": 0,
+            "rowSpan": 1,
+            "text": "QUANTITY"
+          },
+          {
+            "column": 6,
+            "columnSpan": 4,
+            "row": 0,
+            "rowSpan": 1,
+            "text": "PRICING"
+          },
+          {
+            "column": 0,
+            "columnSpan": 4,
+            "row": 10,
+            "rowSpan": 1,
+            "text": "TOTAL"
+          }
+        ],
+        "rows": [
+          ["ORDER", "", "PRODUCT", "", "QUANTITY", "", "PRICING", "", "", ""],
+          ["PO", "SKU", "DESCRIPTION", "DEPT", "QTY", "UOM", "UNIT PRICE", "DISC", "TAX", "AMOUNT"],
+          [
+            "PO-2026-8842",
+            "B-2001",
+            "LABEL PRINTER",
+            "OPS",
+            "1",
+            "EA",
+            "3,450.00",
+            "0",
+            "345.00",
+            "3,795.00"
+          ],
+          [
+            "PO-2026-8842",
+            "B-2002",
+            "THERMAL ROLL",
+            "OPS",
+            "12",
+            "RL",
+            "18.00",
+            "0",
+            "21.60",
+            "237.60"
+          ],
+          [
+            "PO-2026-8842",
+            "B-2003",
+            "PACKING TAPE",
+            "OPS",
+            "24",
+            "RL",
+            "6.50",
+            "0",
+            "15.60",
+            "171.60"
+          ],
+          [
+            "PO-2026-8842",
+            "B-2004",
+            "SHIPPING BOX",
+            "OPS",
+            "50",
+            "EA",
+            "2.20",
+            "0",
+            "11.00",
+            "121.00"
+          ],
+          [
+            "PO-2026-8842",
+            "B-2005",
+            "BUBBLE WRAP",
+            "OPS",
+            "8",
+            "RL",
+            "24.00",
+            "5",
+            "18.24",
+            "200.64"
+          ],
+          [
+            "PO-2026-8842",
+            "B-2006",
+            "SAFETY GLOVES",
+            "OPS",
+            "20",
+            "PR",
+            "4.50",
+            "0",
+            "9.00",
+            "99.00"
+          ],
+          ["PO-2026-8842", "B-2007", "BOX CUTTER", "OPS", "4", "EA", "8.75", "0", "3.50", "38.50"],
+          [
+            "PO-2026-8842",
+            "B-2008",
+            "PALLET WRAP",
+            "OPS",
+            "6",
+            "RL",
+            "32.00",
+            "10",
+            "17.28",
+            "190.08"
+          ],
+          ["TOTAL", "", "", "", "125", "", "", "", "", "4,853.42"]
+        ]
+      }
+    ],
+    "text": "WIDE TABLE - QUARTERLY SUPPLY SUMMARY PERIOD 2026 Q3 - CURRENCY USD - PDF TEXT LAYER WITH HELVETICA ORDER PRODUCT QUANTITY PRICING PO SKU DESCRIPTION DEPT QTY UOM UNIT PRICE DISC TAX AMOUNT PO-2026-8842 B-2001 LABEL PRINTER OPS 1 EA 3,450.00 0 345.00 3,795.00 PO-2026-8842 B-2002 THERMAL ROLL OPS 12 RL 18.00 0 21.60 237.60 PO-2026-8842 B-2003 PACKING TAPE OPS 24 RL 6.50 0 15.60 171.60 PO-2026-8842 B-2004 SHIPPING BOX OPS 50 EA 2.20 0 11.00 121.00 PO-2026-8842 B-2005 BUBBLE WRAP OPS 8 RL 24.00 5 18.24 200.64 PO-2026-8842 B-2006 SAFETY GLOVES OPS 20 PR 4.50 0 9.00 99.00 PO-2026-8842 B-2007 BOX CUTTER OPS 4 EA 8.75 0 3.50 38.50 PO-2026-8842 B-2008 PALLET WRAP OPS 6 RL 32.00 10 17.28 190.08 TOTAL 125 4,853.42 GENERATED FOR OCR BENCHMARK - SYNTHETIC DATA"
+  }
+}

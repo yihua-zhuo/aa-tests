@@ -489,7 +489,55 @@ const OPERATIONS: Record<string, Partial<Record<Method, OperationDoc>>> = {
     },
   },
   '/api/projects/{id}/attachments/{attachmentId}': {
-    delete: { summary: '删除项目附件（上传者或项目管理者）', tags: ['projects'] },
+    delete: {
+      summary: '删除项目附件及其 OCR 文本、字段修订与识别记录（上传者或项目管理者）',
+      tags: ['projects'],
+    },
+  },
+  '/api/projects/{id}/attachments/{attachmentId}/ocr': {
+    get: { summary: '读取附件 OCR 文本与识别状态', tags: ['projects'] },
+    post: { summary: '重新排队附件 OCR（上传者或项目管理者）', tags: ['projects'] },
+  },
+  '/api/projects/{id}/attachments/{attachmentId}/ocr/export': {
+    get: {
+      summary: '导出脱敏 OCR 文本（身份证、手机号、座机、邮箱、银行卡、MRZ）',
+      tags: ['projects'],
+    },
+  },
+  '/api/projects/{id}/attachments/{attachmentId}/ocr/fields': {
+    get: {
+      summary: '关键字段来源定位（页、块、坐标、模型、校验规则）',
+      tags: ['projects'],
+    },
+  },
+  '/api/projects/{id}/attachments/{attachmentId}/ocr/fields/{fieldId}/revisions': {
+    post: {
+      summary: '记录字段级人工修订，保留原始 OCR 值、证据区域与修订历史',
+      tags: ['projects'],
+      body: {
+        name: 'OcrFieldRevisionInput',
+        schema: z.object({
+          revisedText: z.string().min(1).max(4000),
+          reason: z.string().min(1).max(500),
+        }),
+      },
+    },
+  },
+  '/api/projects/{id}/attachments/{attachmentId}/ocr/versions': {
+    get: {
+      summary: 'OCR 版本链：原始结果、恢复阶段、候选选择和人工修订的父子关系',
+      tags: ['projects'],
+    },
+  },
+  '/api/projects/{id}/attachments/{attachmentId}/ocr/complaints': {
+    post: {
+      summary: '提交识别问题反馈，自动进入待标注池且不修改原始 OCR 文本',
+      tags: ['projects'],
+      body: {
+        name: 'OcrComplaintInput',
+        schema: z.object({ note: z.string().min(3).max(500) }),
+      },
+    },
   },
   '/files/attachments/{id}': {
     get: {
@@ -771,6 +819,305 @@ const OPERATIONS: Record<string, Partial<Record<Method, OperationDoc>>> = {
   },
   '/api/ops/integrity': {
     get: { summary: '执行 SQLite integrity_check（管理员）', tags: ['ops'], sessionOnly: true },
+  },
+  '/api/ocr/lab': {
+    get: {
+      summary: 'OCR 基准状态、样本列表与最近一次结果（管理员）',
+      tags: ['ops'],
+      sessionOnly: true,
+    },
+  },
+  '/api/ocr/lab/run': {
+    post: {
+      summary: '在本地 OCR 服务上运行准确率基准并返回进度（管理员）',
+      tags: ['ops'],
+      sessionOnly: true,
+    },
+  },
+  '/api/ocr/lab/replay': {
+    post: {
+      summary: '按已记录参数重放基准运行的某个 OCR 阶段或单区域（管理员）',
+      tags: ['ops'],
+      sessionOnly: true,
+    },
+  },
+  '/api/ocr/lab/experiment': {
+    get: {
+      summary: '查看最近一次模型/预处理对照实验（管理员）',
+      tags: ['ops'],
+      sessionOnly: true,
+    },
+    post: {
+      summary:
+        '运行模型与预处理（模式/DPI/通道）对照实验，按准确率、字段、耗时和内存综合排序（管理员）',
+      tags: ['ops'],
+      sessionOnly: true,
+    },
+  },
+  '/api/ocr/calibration': {
+    get: {
+      summary: '按整体/文档类型/难度/语言/文件类型/客户组织查看拟合阈值（管理员）',
+      tags: ['ops'],
+      sessionOnly: true,
+    },
+  },
+  '/api/ocr/calibration/fit': {
+    post: {
+      summary: '用最近一次基准样本或请求样本拟合复核/失败/关键字段阈值（管理员）',
+      tags: ['ops'],
+      sessionOnly: true,
+    },
+  },
+  '/api/ocr/registry': {
+    get: {
+      summary: 'OCR 模型/流水线注册表：控制、候选、回滚角色、灰度配置与决策审计（管理员）',
+      tags: ['ops'],
+      sessionOnly: true,
+    },
+  },
+  '/api/ocr/registry/register': {
+    post: {
+      summary: '注册模型/流水线并指定角色、灰度比例与基准/生产指标（管理员）',
+      tags: ['ops'],
+      sessionOnly: true,
+    },
+  },
+  '/api/ocr/registry/decision': {
+    post: {
+      summary: '人工晋级、回滚、固定/恢复自动、退场或调整灰度比例/模式，并写入审计（管理员）',
+      tags: ['ops'],
+      sessionOnly: true,
+    },
+  },
+  '/api/ocr/registry/evaluate': {
+    post: {
+      summary: '同步实验/请求指标并按策略自动晋级或回滚（管理员）',
+      tags: ['ops'],
+      sessionOnly: true,
+    },
+  },
+  '/api/ocr/recovery-yields': {
+    get: {
+      summary: '查看各恢复阶段的历史尝试/成功次数、平滑成功率与先验（管理员）',
+      tags: ['ops'],
+      sessionOnly: true,
+    },
+  },
+  '/api/ocr/feedback': {
+    get: {
+      summary: 'OCR 错误样本池汇总与明细（管理员，不含文档正文）',
+      tags: ['ops'],
+      sessionOnly: true,
+    },
+  },
+  '/api/ocr/feedback/sync': {
+    post: {
+      summary: '回填近期已完成 OCR 的错误样本，按 SHA-256 与错误类型去重（管理员）',
+      tags: ['ops'],
+      sessionOnly: true,
+      body: {
+        name: 'OcrFeedbackSyncInput',
+        schema: z.object({ days: z.number().int().min(1).max(365).optional() }),
+      },
+    },
+  },
+  '/api/ocr/feedback/sample': {
+    post: {
+      summary: '主动学习分层抽样：优先不确定、分歧和关键字段校验失败样本（管理员）',
+      tags: ['ops'],
+      sessionOnly: true,
+      body: {
+        name: 'OcrFeedbackSampleInput',
+        schema: z.object({
+          perStratum: z.number().int().min(1).max(50).optional(),
+          total: z.number().int().min(1).max(500).optional(),
+          budget: z.number().int().min(1).max(10_000).optional(),
+        }),
+      },
+    },
+  },
+  '/api/ocr/feedback/{sampleId}/status': {
+    post: {
+      summary: '标记错误样本为待标注、已标注或忽略，并追加备注（管理员）',
+      tags: ['ops'],
+      sessionOnly: true,
+      body: {
+        name: 'OcrFeedbackStatusInput',
+        schema: z.object({
+          status: z.enum(['pool', 'labeled', 'dismissed']),
+          note: z.string().max(500).optional(),
+        }),
+      },
+    },
+  },
+  '/api/ocr/knowledge': {
+    get: {
+      summary: '只读文档知识图谱：跨附件实体、引用关系与金额指标（管理员）',
+      tags: ['ops'],
+      sessionOnly: true,
+      query: z.object({
+        projectId: z.string().optional(),
+        limit: z.coerce.number().int().min(1).max(1000).optional(),
+      }),
+    },
+  },
+  '/api/ocr/pass-audits': {
+    get: {
+      summary: '通过文档随机审计队列与静默错误率统计（管理员，不含文档正文）',
+      tags: ['ops'],
+      sessionOnly: true,
+      query: z.object({
+        status: z.enum(['all', 'pending', 'audited']).optional(),
+        projectId: z.string().optional(),
+        period: z.string().optional(),
+      }),
+    },
+  },
+  '/api/ocr/pass-audits/sample': {
+    post: {
+      summary: '按文件类型分层随机抽取自动通过文档，进入双人独立复核（管理员）',
+      tags: ['ops'],
+      sessionOnly: true,
+      body: {
+        name: 'OcrPassAuditSampleInput',
+        schema: z.object({
+          fraction: z.number().min(0.001).max(0.2).optional(),
+          perType: z.number().int().min(1).max(50).optional(),
+          period: z
+            .string()
+            .regex(/^\d{4}-W\d{2}$/)
+            .optional(),
+          projectId: z.string().optional(),
+        }),
+      },
+    },
+  },
+  '/api/ocr/pass-audits/{id}/verdict': {
+    post: {
+      summary: '为审计样本登记第一名或第二名复核结论，一致才算审结（管理员）',
+      tags: ['ops'],
+      sessionOnly: true,
+      body: {
+        name: 'OcrPassAuditVerdictInput',
+        schema: z.object({
+          verdict: z.enum(['clean', 'error']),
+          note: z.string().max(500).optional(),
+        }),
+      },
+    },
+  },
+  '/api/ocr/revision-qc': {
+    get: {
+      summary: '人工修订质检队列与复核者一致性统计（管理员，不含文档正文）',
+      tags: ['ops'],
+      sessionOnly: true,
+      query: z.object({
+        projectId: z.string().optional(),
+        limit: z.coerce.number().int().min(1).max(200).optional(),
+      }),
+    },
+  },
+  '/api/ocr/revision-qc/{id}/review': {
+    post: {
+      summary: '为一条人工修订登记确认、改判或仲裁意见，修订人不可自审（管理员）',
+      tags: ['ops'],
+      sessionOnly: true,
+      body: {
+        name: 'OcrRevisionReviewInput',
+        schema: z.object({
+          verdict: z.enum(['confirm', 'revise', 'arbitrate']),
+          value: z.string().max(2000).optional(),
+          note: z.string().max(2000).optional(),
+        }),
+      },
+    },
+  },
+  '/api/ocr/quality/dashboard': {
+    get: {
+      summary: 'OCR 生产质量看板：客户组织、模型、语言、文件类型、页数、阶段指标与漂移（管理员）',
+      tags: ['ops'],
+      sessionOnly: true,
+      query: z.object({ days: z.coerce.number().int().min(1).max(365).optional() }),
+    },
+  },
+  '/api/ocr/drift': {
+    get: {
+      summary: '对比生产输入与基准语料的分辨率、语言、类型、页尺寸、噪声和版面分布（管理员）',
+      tags: ['ops'],
+      sessionOnly: true,
+      query: z.object({ days: z.coerce.number().int().min(1).max(365).optional() }),
+    },
+  },
+  '/api/ocr/drift/baseline': {
+    post: {
+      summary: '使用近期完成 OCR 的元数据快照作为漂移基准（管理员，至少 20 个样本）',
+      tags: ['ops'],
+      sessionOnly: true,
+      body: {
+        name: 'OcrDriftBaselineInput',
+        schema: z.object({ days: z.number().int().min(1).max(365).optional() }),
+      },
+    },
+  },
+  '/api/ocr/drift/check': {
+    post: {
+      summary: '执行漂移检查并持久化告警，触发补充语料与重新评估建议（管理员）',
+      tags: ['ops'],
+      sessionOnly: true,
+      body: {
+        name: 'OcrDriftCheckInput',
+        schema: z.object({ days: z.number().int().min(1).max(365).optional() }),
+      },
+    },
+  },
+  '/api/ocr/optimizations': {
+    get: {
+      summary: '按准确率提升/成本排序的 OCR 持续优化台账（管理员）',
+      tags: ['ops'],
+      sessionOnly: true,
+    },
+    post: {
+      summary: '登记一项优化：目标错误、预期收益、实现/推理成本、风险与结果（管理员）',
+      tags: ['ops'],
+      sessionOnly: true,
+      body: {
+        name: 'OcrOptimizationCreate',
+        schema: z.object({
+          title: z.string().min(1).max(200),
+          targetError: z.string().min(1).max(200),
+          expectedGain: z.number().min(0).max(1),
+          implementationCost: z.number().min(0).max(1000).optional(),
+          inferenceCost: z.number().min(0).max(10).optional(),
+          risk: z.enum(['low', 'medium', 'high']).optional(),
+          benchmarkResult: z.string().max(2000).optional(),
+          productionResult: z.string().max(2000).optional(),
+          status: z.enum(['proposed', 'implemented', 'measured', 'rolled_back']).optional(),
+        }),
+      },
+    },
+  },
+  '/api/ocr/optimizations/{id}': {
+    patch: {
+      summary: '更新优化台账的基准结果、生产观察或状态（管理员）',
+      tags: ['ops'],
+      sessionOnly: true,
+      body: {
+        name: 'OcrOptimizationPatch',
+        schema: z
+          .object({
+            title: z.string().min(1).max(200),
+            targetError: z.string().min(1).max(200),
+            expectedGain: z.number().min(0).max(1),
+            implementationCost: z.number().min(0).max(1000),
+            inferenceCost: z.number().min(0).max(10),
+            risk: z.enum(['low', 'medium', 'high']),
+            benchmarkResult: z.string().max(2000),
+            productionResult: z.string().max(2000),
+            status: z.enum(['proposed', 'implemented', 'measured', 'rolled_back']),
+          })
+          .partial(),
+      },
+    },
   },
   '/api/ops/backups': {
     post: { summary: '立即创建一致性备份（管理员）', tags: ['ops'], sessionOnly: true },

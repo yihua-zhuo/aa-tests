@@ -19,6 +19,9 @@ const FILE_TYPES: readonly FileType[] = [
   { ext: '.jpeg', mime: 'image/jpeg', kind: 'image' },
   { ext: '.gif', mime: 'image/gif', kind: 'image' },
   { ext: '.webp', mime: 'image/webp', kind: 'image' },
+  { ext: '.bmp', mime: 'image/bmp', kind: 'document' },
+  { ext: '.tif', mime: 'image/tiff', kind: 'document' },
+  { ext: '.tiff', mime: 'image/tiff', kind: 'document' },
   { ext: '.pdf', mime: 'application/pdf', kind: 'document' },
   { ext: '.txt', mime: 'text/plain', kind: 'document' },
   { ext: '.md', mime: 'text/markdown', kind: 'document' },
@@ -83,6 +86,13 @@ function matchesType(type: FileType, data: Uint8Array): boolean {
     case '.webp':
       return (
         startsWith(data, [0x52, 0x49, 0x46, 0x46]) && startsWith(data, [0x57, 0x45, 0x42, 0x50], 8)
+      );
+    case '.bmp':
+      return startsWith(data, [0x42, 0x4d]);
+    case '.tif':
+    case '.tiff':
+      return (
+        startsWith(data, [0x49, 0x49, 0x2a, 0x00]) || startsWith(data, [0x4d, 0x4d, 0x00, 0x2a])
       );
     case '.pdf':
       return startsWith(data, [0x25, 0x50, 0x44, 0x46, 0x2d]);

@@ -1,0 +1,156 @@
+{
+  "approval_stamp_signature.png": {
+    "conditions": {
+      "region": "combined"
+    },
+    "degradations": ["stamp", "signature"],
+    "difficulty": "severe",
+    "fields": {
+      "date": "2026-10-31",
+      "signatory": "OPERATIONS LEAD",
+      "status": "APPROVED"
+    },
+    "keywords": ["DOCUMENT APPROVAL", "APPROVED", "SIGNATURE", "OPERATIONS LEAD"],
+    "kind": "image",
+    "lang": "en",
+    "provenance": {
+      "annotatedAt": "2026-10-31T00:00:00Z",
+      "annotator": "synthetic-generator",
+      "sha256": "5570950f1dff5ceef2affaabb19773baac752ec2d6547feeafbf4158cb2d191d",
+      "source": "scripts/generate_semantic_corpus.py"
+    },
+    "text": "DOCUMENT APPROVAL THIS PAGE CONFIRMS THAT THE REQUEST HAS BEEN REVIEWED. APPROVED SIGNATURE AUTHORIZED BY OPERATIONS LEAD DATE: 2026-10-31"
+  },
+  "chart_bars.png": {
+    "conditions": {
+      "region": "chart"
+    },
+    "degradations": ["chart"],
+    "difficulty": "moderate",
+    "fields": {
+      "east": "640",
+      "north": "256",
+      "south": "384",
+      "title": "QUARTERLY REVENUE BY REGION",
+      "west": "190"
+    },
+    "keywords": ["QUARTERLY REVENUE BY REGION", "REVENUE K CNY", "EAST", "640", "WEST", "190"],
+    "kind": "image",
+    "lang": "en",
+    "provenance": {
+      "annotatedAt": "2026-10-31T00:00:00Z",
+      "annotator": "synthetic-generator",
+      "sha256": "19c36c503f3e0356ddd507e55620ff177e381767b4ad2e4cd800e19d4514f10d",
+      "source": "scripts/generate_semantic_corpus.py"
+    },
+    "text": "QUARTERLY REVENUE BY REGION FY 2026 Q3 REVENUE K CNY 800 600 400 200 0 EAST 640 SOUTH 384 NORTH 256 WEST 190 REGION"
+  },
+  "formula_block.png": {
+    "conditions": {
+      "region": "formula"
+    },
+    "degradations": ["formula"],
+    "difficulty": "moderate",
+    "fields": {
+      "product_formula": "X=Y*Z",
+      "rate_formula": "RATE=0.185",
+      "report": "FORMULA SUMMARY",
+      "total_formula": "TOTAL=A+B"
+    },
+    "keywords": ["FORMULA SUMMARY", "EXPRESSION BLOCK", "TOTAL=A+B", "RATE=0.185", "X=Y*Z"],
+    "kind": "image",
+    "lang": "en",
+    "provenance": {
+      "annotatedAt": "2026-10-31T00:00:00Z",
+      "annotator": "synthetic-generator",
+      "sha256": "92b9d351e17d21684cd8509d1a2f7fbd498c0c9e2531717a4e25aa1eb8e1cb9f",
+      "source": "scripts/generate_semantic_corpus.py"
+    },
+    "text": "FORMULA SUMMARY THE FOLLOWING EXPRESSIONS WERE EXTRACTED FROM THE RATE MODEL. EXPRESSION BLOCK TOTAL=A+B RATE=0.185 X=Y*Z FORMULAS ARE EVALUATED AT RUNTIME. RESULTS ARE NOT STORED IN THE LEDGER."
+  },
+  "handwriting_note.png": {
+    "conditions": {
+      "region": "handwriting"
+    },
+    "degradations": ["handwriting"],
+    "difficulty": "severe",
+    "fields": {
+      "followup": "BRING THE DRAFT REPORT",
+      "from": "OPERATIONS",
+      "note": "MEETING MOVED TO ROOM 4B AT 3 PM"
+    },
+    "keywords": ["HANDWRITTEN NOTE", "MEETING MOVED", "ROOM 4B", "DRAFT REPORT"],
+    "kind": "image",
+    "lang": "en",
+    "provenance": {
+      "annotatedAt": "2026-10-31T00:00:00Z",
+      "annotator": "synthetic-generator",
+      "sha256": "8ff31d44533da37a6a81be9431d8772962d8e813bde0d87f3bb7db57dc48c2be",
+      "source": "scripts/generate_semantic_corpus.py"
+    },
+    "text": "HANDWRITTEN NOTE MEETING MOVED TO ROOM 4B AT 3 PM BRING THE DRAFT REPORT FROM: OPERATIONS"
+  },
+  "red_stamp.png": {
+    "conditions": {
+      "region": "red_stamp"
+    },
+    "degradations": ["stamp"],
+    "difficulty": "moderate",
+    "fields": {
+      "reference": "DOC-2026-118",
+      "status": "PAID"
+    },
+    "keywords": ["DOCUMENT STATUS", "REFERENCE: DOC-2026-118", "PAID"],
+    "kind": "image",
+    "lang": "en",
+    "provenance": {
+      "annotatedAt": "2026-10-31T00:00:00Z",
+      "annotator": "synthetic-generator",
+      "sha256": "1cc30f87e3d8b0091e837fbc88aa981f8172c601b41ff22cd7e56f8d496d0fec",
+      "source": "scripts/generate_semantic_corpus.py"
+    },
+    "text": "DOCUMENT STATUS THE FOLLOWING DOCUMENT HAS BEEN REVIEWED AND RECORDED. REFERENCE: DOC-2026-118 PAID KEEP THIS COPY WITH THE ORIGINAL FILING."
+  },
+  "signature_block.png": {
+    "conditions": {
+      "region": "signature_line"
+    },
+    "degradations": ["signature"],
+    "difficulty": "moderate",
+    "fields": {
+      "date": "2026-10-31",
+      "signatory": "OPERATIONS LEAD"
+    },
+    "keywords": ["AUTHORIZATION FORM", "SIGNATURE", "OPERATIONS LEAD"],
+    "kind": "image",
+    "lang": "en",
+    "provenance": {
+      "annotatedAt": "2026-10-31T00:00:00Z",
+      "annotator": "synthetic-generator",
+      "sha256": "f26177337f93c22df1291cdb6ff3ab8f7813dbfbd255ae90ba70f209af9c1ed3",
+      "source": "scripts/generate_semantic_corpus.py"
+    },
+    "text": "AUTHORIZATION FORM REQUEST REVIEWED BY OPERATIONS. SIGNATURE AUTHORIZED BY OPERATIONS LEAD DATE: 2026-10-31"
+  },
+  "vertical_text.png": {
+    "conditions": {
+      "region": "vertical_label"
+    },
+    "degradations": ["vertical_text"],
+    "difficulty": "moderate",
+    "fields": {
+      "label": "REGION EAST REPORT 2026",
+      "orientation": "90"
+    },
+    "keywords": ["SIDEWAYS SECTION", "REGION EAST REPORT 2026", "ROTATED NINETY DEGREES"],
+    "kind": "image",
+    "lang": "en",
+    "provenance": {
+      "annotatedAt": "2026-10-31T00:00:00Z",
+      "annotator": "synthetic-generator",
+      "sha256": "b30d59b8c1fffa5f236a6ff98ec9b38ea463f21458a61daf566514808fa329b8",
+      "source": "scripts/generate_semantic_corpus.py"
+    },
+    "text": "SIDEWAYS SECTION THE FOLLOWING LABEL IS ROTATED NINETY DEGREES CLOCKWISE. REGION EAST REPORT 2026"
+  }
+}

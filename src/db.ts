@@ -6,7 +6,7 @@ import { PROJECT_STATUS_LABELS } from '../shared/permissions.ts';
 import type { User } from '../shared/types.ts';
 import { log } from './logger.ts';
 
-export const SCHEMA_VERSION = 18;
+export const SCHEMA_VERSION = 31;
 
 export function positiveIntEnv(name: string, fallback: number): number {
   const raw = process.env[name]?.trim();
@@ -43,6 +43,19 @@ export const MIGRATION_STEPS = [
   { version: 16, name: 'enterprise operations, workflows and analytics' },
   { version: 17, name: 'enterprise collaboration and execution' },
   { version: 18, name: 'cross-project dependencies, routing and reminders' },
+  { version: 19, name: 'attachment OCR text' },
+  { version: 20, name: 'attachment OCR metadata and reuse index' },
+  { version: 21, name: 'OCR model-aware reuse and truncation' },
+  { version: 22, name: 'OCR table mode and PDF DPI options' },
+  { version: 23, name: 'OCR benchmark run history' },
+  { version: 24, name: 'OCR benchmark raw CER' },
+  { version: 25, name: 'adaptive document intelligence metadata' },
+  { version: 26, name: 'OCR per-field outcomes and calibration groups' },
+  { version: 27, name: 'OCR field provenance revisions' },
+  { version: 28, name: 'OCR feedback pool, drift and optimization ledger' },
+  { version: 29, name: 'OCR fitted threshold profiles' },
+  { version: 30, name: 'OCR model and pipeline registry' },
+  { version: 31, name: 'OCR localized field metric and revision quality control' },
 ] as const;
 
 export function escapeLike(value: string): string {
@@ -450,11 +463,259 @@ export class Database {
       );
       CREATE INDEX IF NOT EXISTS attachments_project ON attachments (project_id, created_at DESC);
 
+      CREATE TABLE IF NOT EXISTS ocr_field_revisions (
+        id TEXT PRIMARY KEY,
+        attachment_id TEXT NOT NULL REFERENCES attachments(id) ON DELETE CASCADE,
+        project_id TEXT NOT NULL REFERENCES projects(id) ON DELETE CASCADE,
+        field_id TEXT NOT NULL,
+        field_kind TEXT NOT NULL,
+        page INTEGER NOT NULL,
+        block_id TEXT,
+        bbox_json TEXT,
+        original_text TEXT NOT NULL,
+        revised_text TEXT NOT NULL,
+        reason TEXT NOT NULL,
+        revised_by TEXT REFERENCES users(id) ON DELETE SET NULL,
+        revised_by_name TEXT,
+        created_at TEXT NOT NULL
+      );
+      CREATE INDEX IF NOT EXISTS ocr_field_revisions_attachment
+        ON ocr_field_revisions (attachment_id, created_at DESC);
+      CREATE INDEX IF NOT EXISTS ocr_field_revisions_field
+        ON ocr_field_revisions (attachment_id, field_id, created_at DESC);
+
+      CREATE TABLE IF NOT EXISTS ocr_revision_reviews (
+        id TEXT PRIMARY KEY,
+        revision_id TEXT NOT NULL REFERENCES ocr_field_revisions(id) ON DELETE CASCADE,
+        verdict TEXT NOT NULL
+          CHECK (verdict IN ('confirm', 'revise', 'arbitrate')),
+        value TEXT,
+        note TEXT,
+        reviewed_by TEXT REFERENCES users(id) ON DELETE SET NULL,
+        reviewed_by_name TEXT,
+        created_at TEXT NOT NULL,
+        UNIQUE (revision_id, reviewed_by)
+      );
+      CREATE INDEX IF NOT EXISTS ocr_revision_reviews_revision
+        ON ocr_revision_reviews (revision_id, created_at);
+
+      CREATE TABLE IF NOT EXISTS ocr_feedback_samples (
+        id TEXT PRIMARY KEY,
+        attachment_id TEXT REFERENCES attachments(id) ON DELETE CASCADE,
+        project_id TEXT REFERENCES projects(id) ON DELETE CASCADE,
+        sha256 TEXT,
+        dedupe_key TEXT NOT NULL UNIQUE,
+        error_type TEXT NOT NULL
+          CHECK (error_type IN ('low_confidence', 'model_disagreement', 'field_validation',
+                                'human_revision', 'user_complaint')),
+        category TEXT NOT NULL,
+        lang TEXT,
+        page INTEGER,
+        block_id TEXT,
+        field_id TEXT,
+        signals_json TEXT NOT NULL DEFAULT '{}',
+        priority REAL NOT NULL DEFAULT 0,
+        status TEXT NOT NULL DEFAULT 'pool'
+          CHECK (status IN ('pool', 'sampled', 'labeled', 'dismissed')),
+        note TEXT,
+        created_at TEXT NOT NULL,
+        sampled_at TEXT,
+        labeled_at TEXT
+      );
+      CREATE INDEX IF NOT EXISTS ocr_feedback_status
+        ON ocr_feedback_samples (status, priority DESC, created_at);
+      CREATE INDEX IF NOT EXISTS ocr_feedback_stratum
+        ON ocr_feedback_samples (error_type, category, priority DESC);
+      CREATE INDEX IF NOT EXISTS ocr_feedback_attachment
+        ON ocr_feedback_samples (attachment_id, created_at DESC);
+
+      CREATE TABLE IF NOT EXISTS ocr_drift_baseline (
+        id INTEGER PRIMARY KEY CHECK (id = 1),
+        sample_size INTEGER NOT NULL,
+        distribution_json TEXT NOT NULL,
+        created_by TEXT REFERENCES users(id) ON DELETE SET NULL,
+        created_at TEXT NOT NULL
+      );
+
+      CREATE TABLE IF NOT EXISTS ocr_drift_alerts (
+        id TEXT PRIMARY KEY,
+        dedupe_key TEXT NOT NULL UNIQUE,
+        dimension TEXT NOT NULL,
+        severity TEXT NOT NULL CHECK (severity IN ('info', 'warn', 'critical')),
+        total_variation REAL NOT NULL,
+        threshold REAL NOT NULL,
+        message TEXT NOT NULL,
+        buckets_json TEXT NOT NULL DEFAULT '[]',
+        status TEXT NOT NULL DEFAULT 'open'
+          CHECK (status IN ('open', 'acknowledged')),
+        detected_at TEXT NOT NULL,
+        acknowledged_by TEXT REFERENCES users(id) ON DELETE SET NULL,
+        acknowledged_at TEXT
+      );
+      CREATE INDEX IF NOT EXISTS ocr_drift_alerts_recent
+        ON ocr_drift_alerts (detected_at DESC);
+
+      CREATE TABLE IF NOT EXISTS ocr_optimizations (
+        id TEXT PRIMARY KEY,
+        title TEXT NOT NULL,
+        target_error TEXT NOT NULL,
+        expected_gain REAL NOT NULL CHECK (expected_gain >= 0 AND expected_gain <= 1),
+        implementation_cost REAL NOT NULL CHECK (implementation_cost >= 0),
+        inference_cost REAL NOT NULL CHECK (inference_cost >= 0),
+        risk TEXT NOT NULL DEFAULT 'medium'
+          CHECK (risk IN ('low', 'medium', 'high')),
+        benchmark_result TEXT NOT NULL DEFAULT '',
+        production_result TEXT NOT NULL DEFAULT '',
+        status TEXT NOT NULL DEFAULT 'proposed'
+          CHECK (status IN ('proposed', 'implemented', 'measured', 'rolled_back')),
+        created_by TEXT REFERENCES users(id) ON DELETE SET NULL,
+        created_at TEXT NOT NULL,
+        updated_at TEXT NOT NULL
+      );
+      CREATE INDEX IF NOT EXISTS ocr_optimizations_updated
+        ON ocr_optimizations (updated_at DESC);
+
+      CREATE TABLE IF NOT EXISTS ocr_threshold_profiles (
+        id TEXT PRIMARY KEY,
+        dimension TEXT NOT NULL
+          CHECK (dimension IN ('overall', 'kind', 'difficulty', 'language', 'file_type', 'workspace')),
+        value TEXT NOT NULL,
+        workspace_id TEXT NOT NULL DEFAULT '',
+        samples INTEGER NOT NULL,
+        positives INTEGER NOT NULL,
+        review_threshold REAL NOT NULL,
+        fail_threshold REAL NOT NULL,
+        key_field_confidence REAL NOT NULL,
+        precision REAL,
+        recall REAL,
+        false_review_rate REAL,
+        ece REAL,
+        calibrated_ece REAL,
+        confidence_map TEXT,
+        brier REAL,
+        calibrated INTEGER NOT NULL DEFAULT 0,
+        created_at TEXT NOT NULL,
+        updated_at TEXT NOT NULL,
+        UNIQUE (dimension, value, workspace_id)
+      );
+      CREATE INDEX IF NOT EXISTS ocr_threshold_profiles_dimension
+        ON ocr_threshold_profiles (dimension, value);
+
+      CREATE TABLE IF NOT EXISTS ocr_registry_entries (
+        id TEXT PRIMARY KEY,
+        engine TEXT NOT NULL CHECK (engine IN ('paddle', 'docling')),
+        model_id TEXT NOT NULL,
+        pipeline TEXT NOT NULL DEFAULT '',
+        role TEXT NOT NULL CHECK (role IN ('control', 'candidate', 'rollback', 'retired')),
+        mode TEXT NOT NULL DEFAULT 'canary' CHECK (mode IN ('canary', 'shadow', 'rollback')),
+        auto INTEGER NOT NULL DEFAULT 1,
+        percent INTEGER NOT NULL DEFAULT 0 CHECK (percent BETWEEN 0 AND 100),
+        benchmark_score REAL,
+        benchmark_samples INTEGER NOT NULL DEFAULT 0,
+        production_score REAL,
+        production_samples INTEGER NOT NULL DEFAULT 0,
+        note TEXT NOT NULL DEFAULT '',
+        decided_by TEXT,
+        decided_at TEXT,
+        created_at TEXT NOT NULL,
+        updated_at TEXT NOT NULL,
+        UNIQUE (engine, model_id, pipeline)
+      );
+      CREATE INDEX IF NOT EXISTS ocr_registry_entries_role
+        ON ocr_registry_entries (engine, role, updated_at DESC);
+
+      CREATE TABLE IF NOT EXISTS ocr_registry_decisions (
+        id TEXT PRIMARY KEY,
+        at TEXT NOT NULL,
+        actor TEXT NOT NULL CHECK (actor IN ('auto', 'human')),
+        action TEXT NOT NULL
+          CHECK (action IN ('register', 'promote', 'rollback', 'hold', 'retire', 'percent', 'pin')),
+        engine TEXT NOT NULL CHECK (engine IN ('paddle', 'docling')),
+        model_id TEXT NOT NULL,
+        pipeline TEXT NOT NULL DEFAULT '',
+        from_role TEXT,
+        to_role TEXT,
+        percent INTEGER,
+        reason TEXT NOT NULL,
+        metrics_json TEXT NOT NULL DEFAULT '{}'
+      );
+      CREATE INDEX IF NOT EXISTS ocr_registry_decisions_at
+        ON ocr_registry_decisions (at DESC);
+
+      CREATE TABLE IF NOT EXISTS ocr_recovery_yields (
+        stage TEXT PRIMARY KEY,
+        attempts INTEGER NOT NULL DEFAULT 0,
+        successes INTEGER NOT NULL DEFAULT 0,
+        updated_at TEXT NOT NULL
+      );
+
       CREATE TABLE IF NOT EXISTS app_settings (
         key TEXT PRIMARY KEY,
         value TEXT NOT NULL,
         updated_at TEXT NOT NULL
       );
+
+      CREATE TABLE IF NOT EXISTS ocr_bench_runs (
+        id TEXT PRIMARY KEY,
+        status TEXT NOT NULL CHECK (status IN ('running', 'done', 'failed')),
+        started_at TEXT NOT NULL,
+        finished_at TEXT,
+        include_pdf INTEGER NOT NULL DEFAULT 0,
+        total INTEGER NOT NULL,
+        completed INTEGER NOT NULL DEFAULT 0,
+        current TEXT,
+        error TEXT
+      );
+      CREATE INDEX IF NOT EXISTS ocr_bench_runs_started
+        ON ocr_bench_runs (started_at DESC);
+
+      CREATE TABLE IF NOT EXISTS ocr_bench_files (
+        run_id TEXT NOT NULL REFERENCES ocr_bench_runs(id) ON DELETE CASCADE,
+        ordinal INTEGER NOT NULL,
+        name TEXT NOT NULL,
+        engine TEXT NOT NULL CHECK (engine IN ('paddle', 'docling')),
+        kind TEXT NOT NULL,
+        status TEXT NOT NULL CHECK (status IN ('done', 'failed')),
+        model TEXT,
+        seconds REAL NOT NULL,
+        characters INTEGER NOT NULL,
+        confidence REAL,
+        pages INTEGER NOT NULL,
+        truncated INTEGER NOT NULL DEFAULT 0,
+        cer REAL,
+        raw_cer REAL,
+        keyword_hit INTEGER,
+        keyword_total INTEGER,
+        error TEXT,
+        field_outcomes_json TEXT,
+        PRIMARY KEY (run_id, name)
+      );
+      CREATE INDEX IF NOT EXISTS ocr_bench_files_run
+        ON ocr_bench_files (run_id, ordinal);
+
+      CREATE TABLE IF NOT EXISTS ocr_pass_audits (
+        id TEXT PRIMARY KEY,
+        attachment_id TEXT NOT NULL REFERENCES attachments(id) ON DELETE CASCADE,
+        project_id TEXT NOT NULL REFERENCES projects(id) ON DELETE CASCADE,
+        workspace_id TEXT,
+        doc_type TEXT NOT NULL,
+        engine TEXT,
+        model TEXT,
+        quality_score REAL,
+        confidence REAL,
+        period TEXT NOT NULL,
+        sampled_at TEXT NOT NULL,
+        first_verdict TEXT CHECK (first_verdict IN ('clean', 'error')),
+        first_by TEXT REFERENCES users(id),
+        first_at TEXT,
+        second_verdict TEXT CHECK (second_verdict IN ('clean', 'error')),
+        second_by TEXT REFERENCES users(id),
+        second_at TEXT,
+        note TEXT,
+        UNIQUE (attachment_id)
+      );
+      CREATE INDEX IF NOT EXISTS ocr_pass_audits_period
+        ON ocr_pass_audits (period, sampled_at);
 
       CREATE TABLE IF NOT EXISTS feature_flags (
         key TEXT PRIMARY KEY,
@@ -2135,6 +2396,70 @@ export class Database {
     this.#addColumn('notifications', 'pushed_at', 'TEXT');
     this.#addColumn('attachments', 'sha256', 'TEXT');
     this.#addColumn('attachments', 'scan', "TEXT NOT NULL DEFAULT 'clean'");
+    this.#addColumn('attachments', 'ocr_status', "TEXT NOT NULL DEFAULT 'skipped'");
+    this.#addColumn('attachments', 'ocr_engine', 'TEXT');
+    this.#addColumn('attachments', 'ocr_text', 'TEXT');
+    this.#addColumn('attachments', 'ocr_raw_text', 'TEXT');
+    this.#addColumn('attachments', 'ocr_confidence', 'REAL');
+    this.#addColumn('attachments', 'ocr_error', 'TEXT');
+    this.#addColumn('attachments', 'ocr_attempts', 'INTEGER NOT NULL DEFAULT 0');
+    this.#addColumn('attachments', 'ocr_next_attempt_at', 'TEXT');
+    this.#addColumn('attachments', 'ocr_updated_at', 'TEXT');
+    this.#addColumn('attachments', 'ocr_model', 'TEXT');
+    this.#addColumn('attachments', 'ocr_seconds', 'REAL');
+    this.#addColumn('attachments', 'ocr_pages', 'INTEGER NOT NULL DEFAULT 0');
+    this.#addColumn('attachments', 'ocr_engine_model', 'TEXT');
+    this.#addColumn('attachments', 'ocr_config_hash', 'TEXT');
+    this.#addColumn('attachments', 'ocr_lease_until', 'TEXT');
+    this.#addColumn('attachments', 'ocr_truncated', 'INTEGER NOT NULL DEFAULT 0');
+    this.#addColumn('attachments', 'ocr_force', 'INTEGER NOT NULL DEFAULT 0');
+    this.#addColumn('attachments', 'ocr_mode', "TEXT NOT NULL DEFAULT 'auto'");
+    this.#addColumn('attachments', 'ocr_dpi', 'INTEGER NOT NULL DEFAULT 200');
+    this.#addColumn('attachments', 'ocr_route', 'TEXT');
+    this.#addColumn('attachments', 'ocr_document_json', 'TEXT');
+    this.#addColumn('attachments', 'ocr_quality_score', 'REAL');
+    this.#addColumn('attachments', 'ocr_quality_status', 'TEXT');
+    this.#addColumn('attachments', 'ocr_quality_json', 'TEXT');
+    this.#addColumn('attachments', 'ocr_stages_json', 'TEXT');
+    this.#addColumn('attachments', 'ocr_review_required', 'INTEGER NOT NULL DEFAULT 0');
+    this.#addColumn('attachments', 'ocr_purged_at', 'TEXT');
+    this.#addColumn('ocr_bench_files', 'raw_cer', 'REAL');
+    this.#addColumn('ocr_bench_files', 'route', 'TEXT');
+    this.#addColumn('ocr_bench_files', 'quality_score', 'REAL');
+    this.#addColumn('ocr_bench_files', 'quality_status', 'TEXT');
+    this.#addColumn('ocr_bench_files', 'review_required', 'INTEGER NOT NULL DEFAULT 0');
+    this.#addColumn('ocr_bench_files', 'stages_json', 'TEXT');
+    this.#addColumn('ocr_bench_files', 'numeric_cer', 'REAL');
+    this.#addColumn('ocr_bench_files', 'symbol_cer', 'REAL');
+    this.#addColumn('ocr_bench_files', 'field_hit', 'INTEGER');
+    this.#addColumn('ocr_bench_files', 'field_total', 'INTEGER');
+    this.#addColumn('ocr_bench_files', 'lang', 'TEXT');
+    this.#addColumn('ocr_bench_files', 'difficulty', 'TEXT');
+    this.#addColumn('ocr_bench_files', 'degradations_json', 'TEXT');
+    this.#addColumn('ocr_bench_files', 'wer', 'REAL');
+    this.#addColumn('ocr_bench_files', 'field_exact_hit', 'INTEGER');
+    this.#addColumn('ocr_bench_files', 'field_exact_total', 'INTEGER');
+    this.#addColumn('ocr_bench_files', 'fully_correct', 'INTEGER');
+    this.#addColumn('ocr_bench_files', 'errors_json', 'TEXT');
+    this.#addColumn('ocr_bench_files', 'provenance_json', 'TEXT');
+    this.#addColumn('ocr_bench_files', 'uncertain_json', 'TEXT');
+    this.#addColumn('ocr_bench_files', 'sha256', 'TEXT');
+    this.#addColumn('ocr_bench_files', 'hash_verified', 'INTEGER');
+    this.#addColumn('ocr_bench_files', 'business_json', 'TEXT');
+    this.#addColumn('ocr_bench_files', 'table_json', 'TEXT');
+    this.#addColumn('ocr_bench_files', 'field_outcomes_json', 'TEXT');
+    this.#addColumn('ocr_bench_files', 'confusions_json', 'TEXT');
+    this.#addColumn('ocr_bench_files', 'diagnosis_json', 'TEXT');
+    this.#addColumn('ocr_bench_files', 'routing_json', 'TEXT');
+    this.#addColumn('ocr_bench_files', 'model_sha256', 'TEXT');
+    this.#addColumn('ocr_bench_files', 'runtime_json', 'TEXT');
+    this.#addColumn('ocr_bench_files', 'split', 'TEXT');
+    this.#addColumn('ocr_bench_files', 'field_strong_hit', 'INTEGER');
+    this.#addColumn('ocr_bench_files', 'field_strong_total', 'INTEGER');
+    this.#addColumn('ocr_bench_files', 'field_strong_unverifiable', 'INTEGER');
+    this.#addColumn('ocr_threshold_profiles', 'effective_samples', 'REAL');
+    this.#addColumn('ocr_threshold_profiles', 'calibrated_ece', 'REAL');
+    this.#addColumn('ocr_threshold_profiles', 'confidence_map', 'TEXT');
     this.#addColumn('task_forms', 'version', 'INTEGER NOT NULL DEFAULT 1');
     this.#addColumn('task_form_values', 'signature_name', "TEXT NOT NULL DEFAULT ''");
     this.#addColumn('task_form_values', 'signature_at', 'TEXT');
@@ -2196,6 +2521,22 @@ export class Database {
     this.#addColumn('task_handoffs', 'escalated_at', 'TEXT');
     this.raw.exec(
       'CREATE INDEX IF NOT EXISTS attachments_document ON attachments (document_id, created_at DESC)',
+    );
+    this.raw.exec(
+      'CREATE INDEX IF NOT EXISTS attachments_ocr_pending ON attachments (ocr_status, ocr_next_attempt_at, created_at)',
+    );
+    // Superseded by attachments_ocr_reuse_config: every reuse lookup now
+    // filters by ocr_config_hash, so the pre-fingerprint index is dead weight.
+    this.raw.exec('DROP INDEX IF EXISTS attachments_ocr_reuse');
+    this.raw.exec(
+      `CREATE INDEX IF NOT EXISTS attachments_ocr_reuse_config
+         ON attachments (sha256, ocr_engine, ocr_engine_model, ocr_config_hash, ocr_mode, ocr_dpi)
+        WHERE ocr_status = 'done' AND ocr_truncated = 0`,
+    );
+    this.raw.exec(
+      `CREATE INDEX IF NOT EXISTS attachments_ocr_review
+         ON attachments (ocr_review_required, ocr_updated_at DESC)
+        WHERE ocr_review_required = 1`,
     );
     this.raw.exec('CREATE INDEX IF NOT EXISTS meetings_series ON meetings (series_id, starts_at)');
     this.#migrateDependenciesV18();

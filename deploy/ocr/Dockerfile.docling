@@ -1,0 +1,57 @@
+# syntax=docker/dockerfile:1
+# Optional OCR sidecar: Docling (CPU only).
+#
+# Build from the repository root (the build context must contain scripts/):
+#   docker build -f deploy/ocr/Dockerfile.docling -t pulse-ocr-docling:local .
+# Or through Compose:
+#   docker compose --profile ocr up -d --build
+FROM python:3.11-slim
+
+# Native libraries shared with the Paddle image: Docling pulls in OpenCV for
+# page rasterisation and layout models. libgomp1 provides the OpenMP runtime
+# used by the ONNX/torch inference backends.
+RUN apt-get update \
+    && apt-get install -y --no-install-recommends \
+        ca-certificates \
+        libgl1 \
+        libglib2.0-0 \
+        libgomp1 \
+    && rm -rf /var/lib/apt/lists/*
+
+ENV PYTHONUNBUFFERED=1 \
+    PYTHONDONTWRITEBYTECODE=1 \
+    PIP_DISABLE_PIP_VERSION_CHECK=1
+
+WORKDIR /app
+
+# Optional native extraction helpers (pdfplumber, python-docx, openpyxl,
+# python-pptx, Pillow), installed before the heavy Docling layer for cacheability.
+COPY scripts/requirements-native.txt /app/scripts/requirements-native.txt
+RUN pip install --no-cache-dir -r /app/scripts/requirements-native.txt
+
+# Docling and its model stack. Unpinned on purpose: rebuilds follow upstream
+# wheels; pin them in a fork if reproducible images are required. Model
+# weights are downloaded into the container on the first start.
+RUN pip install --no-cache-dir docling
+
+COPY scripts/ocr_sidecar.py /app/scripts/ocr_sidecar.py
+
+# Fallback upload root for standalone runs. Compose bind-mounts ./data over
+# /app/data (read-only); the directory must already exist on the host then.
+RUN mkdir -p /app/data/uploads
+
+# Unprivileged uid; Compose runs the container with the matching `user:` and
+# drops all Linux capabilities. Model weights land in this user's HOME on the
+# first start, so the container filesystem must stay writable.
+RUN useradd --uid 10001 --create-home --shell /usr/sbin/nologin ocr
+USER 10001:10001
+
+EXPOSE 8766
+
+# /health requires X-OCR-Token whenever OCR_TOKEN is set; the header is read
+# from the environment at check time so it always matches the running config.
+# A 401 (wrong/absent token) or a refused connection makes this exit non-zero.
+HEALTHCHECK --interval=30s --timeout=15s --start-period=180s --retries=3 \
+    CMD python -c "import os, urllib.request; urllib.request.urlopen(urllib.request.Request('http://127.0.0.1:8766/health', headers={'X-OCR-Token': os.environ.get('OCR_TOKEN', '')}), timeout=10).read()"
+
+ENTRYPOINT ["python", "scripts/ocr_sidecar.py", "--engine", "docling", "--host", "0.0.0.0", "--port", "8766", "--upload-root", "/app/data/uploads"]

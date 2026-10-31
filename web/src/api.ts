@@ -6,6 +6,7 @@ import type {
   ApprovalMetrics,
   Attachment,
   AttachmentList,
+  AttachmentOcr,
   AudienceReport,
   AuditCleanupResult,
   AuditPage,
@@ -46,6 +47,43 @@ import type {
   MetricEvaluation,
   MetricImportResult,
   NotificationList,
+  OcrBenchStatus,
+  OcrDriftAlertRecord,
+  OcrDriftReport,
+  OcrEngine,
+  OcrExperimentRequest,
+  OcrExperimentResult,
+  OcrExport,
+  OcrFeedbackErrorType,
+  OcrFeedbackPool,
+  OcrFeedbackSample,
+  OcrFeedbackSelection,
+  OcrFeedbackStatus,
+  OcrFieldList,
+  OcrFieldRevision,
+  OcrGreyMode,
+  OcrKnowledgeGraph,
+  OcrMode,
+  OcrOptimizationEntry,
+  OcrOptimizationRisk,
+  OcrOptimizationStatus,
+  OcrPassAudit,
+  OcrPassAuditStats,
+  OcrPassAuditVerdict,
+  OcrProductionDashboard,
+  OcrRecoveryYield,
+  OcrRegistryDecision,
+  OcrRegistryEvaluation,
+  OcrRegistryPolicy,
+  OcrRegistryRole,
+  OcrRegistryState,
+  OcrRevisionQcItem,
+  OcrRevisionQcStats,
+  OcrRevisionReviewVerdict,
+  OcrStageKind,
+  OcrThresholdFitOptions,
+  OcrThresholdProfile,
+  OcrVersionChain,
   OpsBackup,
   OpsIntegrity,
   OpsSettings,
@@ -142,6 +180,18 @@ const RETRY_DELAYS_MS = [250, 750];
 const RETRYABLE_STATUS = new Set([502, 503, 504]);
 
 export type RequestOptions = { signal?: AbortSignal };
+
+export type OcrOptimizationInput = {
+  title: string;
+  targetError: string;
+  expectedGain: number;
+  implementationCost: number;
+  inferenceCost: number;
+  risk: OcrOptimizationRisk;
+  benchmarkResult?: string;
+  productionResult?: string;
+  status?: OcrOptimizationStatus;
+};
 
 function sleep(ms: number): Promise<void> {
   return new Promise((resolve) => setTimeout(resolve, ms));
@@ -460,6 +510,28 @@ export type SessionState = {
 };
 export type LoginState = SessionState | { mfaRequired: true; ticket: string; expiresIn: number };
 
+/** Subset of the stage replay response the lab UI renders. */
+export type OcrLabReplayResult = {
+  kind: OcrStageKind;
+  mode: OcrMode;
+  dpi: number | null;
+  engine: OcrEngine;
+  inputMatches: boolean | null;
+  recordedOutputSha256: string | null;
+  outputSha256: string | null;
+  outputMatches: boolean | null;
+  scoreBefore: number | null;
+  scoreAfter: number | null;
+  scoreDelta: number | null;
+  candidate: {
+    text: string;
+    confidence: number | null;
+    engine: string;
+    model: string | null;
+    seconds: number;
+  } | null;
+};
+
 export const api = {
   me(): Promise<SessionState> {
     return request('/api/auth/me');
@@ -716,6 +788,232 @@ export const api = {
       `/api/projects/${encodeURIComponent(projectId)}/attachments/${encodeURIComponent(attachmentId)}`,
       { method: 'DELETE' },
     );
+  },
+  attachmentOcr(projectId: string, attachmentId: string): Promise<{ ocr: AttachmentOcr }> {
+    return request(
+      `/api/projects/${encodeURIComponent(projectId)}/attachments/${encodeURIComponent(attachmentId)}/ocr`,
+    );
+  },
+  exportAttachmentOcr(projectId: string, attachmentId: string): Promise<OcrExport> {
+    return request(
+      `/api/projects/${encodeURIComponent(projectId)}/attachments/${encodeURIComponent(attachmentId)}/ocr/export`,
+    );
+  },
+  retryAttachmentOcr(
+    projectId: string,
+    attachmentId: string,
+    options: { mode?: OcrMode; dpi?: number } = {},
+  ): Promise<{ ocr: AttachmentOcr }> {
+    return request(
+      `/api/projects/${encodeURIComponent(projectId)}/attachments/${encodeURIComponent(attachmentId)}/ocr`,
+      json('POST', options),
+    );
+  },
+  attachmentOcrFields(projectId: string, attachmentId: string): Promise<OcrFieldList> {
+    return request(
+      `/api/projects/${encodeURIComponent(projectId)}/attachments/${encodeURIComponent(attachmentId)}/ocr/fields`,
+    );
+  },
+  reviseAttachmentOcrField(
+    projectId: string,
+    attachmentId: string,
+    fieldId: string,
+    input: { revisedText: string; reason: string },
+  ): Promise<{ revision: OcrFieldRevision }> {
+    return request(
+      `/api/projects/${encodeURIComponent(projectId)}/attachments/${encodeURIComponent(attachmentId)}/ocr/fields/${encodeURIComponent(fieldId)}/revisions`,
+      json('POST', input),
+    );
+  },
+  attachmentOcrVersions(
+    projectId: string,
+    attachmentId: string,
+  ): Promise<{ chain: OcrVersionChain }> {
+    return request(
+      `/api/projects/${encodeURIComponent(projectId)}/attachments/${encodeURIComponent(attachmentId)}/ocr/versions`,
+    );
+  },
+  complainAttachmentOcr(
+    projectId: string,
+    attachmentId: string,
+    note: string,
+  ): Promise<{ sample: OcrFeedbackSample | null }> {
+    return request(
+      `/api/projects/${encodeURIComponent(projectId)}/attachments/${encodeURIComponent(attachmentId)}/ocr/complaints`,
+      json('POST', { note }),
+    );
+  },
+  ocrFeedback(
+    query: { status?: OcrFeedbackStatus; errorType?: OcrFeedbackErrorType; limit?: number } = {},
+    signal?: AbortSignal,
+  ): Promise<{ pool: OcrFeedbackPool; samples: OcrFeedbackSample[]; matched: number }> {
+    return request(`/api/ocr/feedback${toQuery(query)}`, {}, { signal });
+  },
+  syncOcrFeedback(days?: number): Promise<{
+    scanned: number;
+    inserted: number;
+    pool: OcrFeedbackPool;
+  }> {
+    return request('/api/ocr/feedback/sync', json('POST', days === undefined ? {} : { days }));
+  },
+  sampleOcrFeedback(input: {
+    perStratum?: number;
+    total?: number;
+    budget?: number;
+  }): Promise<OcrFeedbackSelection> {
+    return request('/api/ocr/feedback/sample', json('POST', input));
+  },
+  ocrKnowledge(input: { projectId?: string; limit?: number } = {}): Promise<{
+    graph: OcrKnowledgeGraph;
+  }> {
+    const params = new URLSearchParams();
+    if (input.projectId) params.set('projectId', input.projectId);
+    if (input.limit !== undefined) params.set('limit', String(input.limit));
+    const query = params.toString();
+    return request(`/api/ocr/knowledge${query ? `?${query}` : ''}`);
+  },
+  ocrRegistry(signal?: AbortSignal): Promise<OcrRegistryState> {
+    return request('/api/ocr/registry', {}, { signal });
+  },
+  ocrRecoveryYields(
+    signal?: AbortSignal,
+  ): Promise<{ yields: OcrRecoveryYield[]; minSamples: number }> {
+    return request('/api/ocr/recovery-yields', {}, { signal });
+  },
+  registerOcrRegistry(input: {
+    engine: OcrEngine;
+    modelId: string;
+    pipeline?: string;
+    role?: OcrRegistryRole;
+    mode?: OcrGreyMode;
+    percent?: number;
+    auto?: boolean;
+    note?: string;
+  }): Promise<OcrRegistryState> {
+    return request('/api/ocr/registry/register', json('POST', input));
+  },
+  decideOcrRegistry(input: {
+    id?: string;
+    engine?: OcrEngine;
+    modelId?: string;
+    pipeline?: string;
+    action: Exclude<OcrRegistryDecision['action'], 'register'>;
+    percent?: number;
+    mode?: OcrGreyMode;
+    pin?: boolean;
+    note?: string;
+    policy?: Partial<OcrRegistryPolicy>;
+  }): Promise<OcrRegistryState & { decision: OcrRegistryDecision }> {
+    return request('/api/ocr/registry/decision', json('POST', input));
+  },
+  evaluateOcrRegistry(
+    input: { syncExperiment?: boolean; policy?: Partial<OcrRegistryPolicy> } = {},
+  ): Promise<OcrRegistryState & { evaluation: OcrRegistryEvaluation }> {
+    return request('/api/ocr/registry/evaluate', json('POST', input));
+  },
+  markOcrFeedback(
+    id: string,
+    input: { status: Exclude<OcrFeedbackStatus, 'sampled'>; note?: string },
+  ): Promise<{ sample: OcrFeedbackSample }> {
+    return request(`/api/ocr/feedback/${encodeURIComponent(id)}/status`, json('POST', input));
+  },
+  ocrDashboard(
+    days = 30,
+    signal?: AbortSignal,
+  ): Promise<{ dashboard: OcrProductionDashboard; alerts: OcrDriftAlertRecord[] }> {
+    return request(`/api/ocr/quality/dashboard${toQuery({ days })}`, {}, { signal });
+  },
+  ocrDrift(
+    days = 30,
+    signal?: AbortSignal,
+  ): Promise<{ drift: OcrDriftReport; alerts: OcrDriftAlertRecord[] }> {
+    return request(`/api/ocr/drift${toQuery({ days })}`, {}, { signal });
+  },
+  saveOcrDriftBaseline(
+    days?: number,
+  ): Promise<{ baseline: { samples: number; createdAt: string } }> {
+    return request('/api/ocr/drift/baseline', json('POST', days === undefined ? {} : { days }));
+  },
+  checkOcrDrift(days?: number): Promise<{
+    drift: OcrDriftReport;
+    inserted: number;
+    alerts: OcrDriftAlertRecord[];
+  }> {
+    return request('/api/ocr/drift/check', json('POST', days === undefined ? {} : { days }));
+  },
+  ocrOptimizations(signal?: AbortSignal): Promise<{ entries: OcrOptimizationEntry[] }> {
+    return request('/api/ocr/optimizations', {}, { signal });
+  },
+  createOcrOptimization(input: OcrOptimizationInput): Promise<{ entry: OcrOptimizationEntry }> {
+    return request('/api/ocr/optimizations', json('POST', input));
+  },
+  updateOcrOptimization(
+    id: string,
+    patch: Partial<OcrOptimizationInput>,
+  ): Promise<{ entry: OcrOptimizationEntry }> {
+    return request(`/api/ocr/optimizations/${encodeURIComponent(id)}`, json('PATCH', patch));
+  },
+  ocrLab(signal?: AbortSignal): Promise<OcrBenchStatus> {
+    return request('/api/ocr/lab', {}, { signal });
+  },
+  runOcrLab(includePdf: boolean): Promise<OcrBenchStatus> {
+    return request('/api/ocr/lab/run', json('POST', { includePdf }));
+  },
+  replayOcrLab(input: {
+    name: string;
+    kind: OcrStageKind;
+    occurrence?: number;
+    page?: number;
+    bbox?: { x: number; y: number; width: number; height: number };
+    padding?: number;
+  }): Promise<OcrLabReplayResult> {
+    return request('/api/ocr/lab/replay', json('POST', input));
+  },
+  ocrExperiment(signal?: AbortSignal): Promise<OcrExperimentResult | null> {
+    return request('/api/ocr/lab/experiment', {}, { signal });
+  },
+  startOcrExperiment(input: OcrExperimentRequest): Promise<OcrExperimentResult> {
+    return request('/api/ocr/lab/experiment', json('POST', input));
+  },
+  ocrCalibration(signal?: AbortSignal): Promise<{ profiles: OcrThresholdProfile[] }> {
+    return request('/api/ocr/calibration', {}, { signal });
+  },
+  fitOcrCalibration(
+    input: { options?: OcrThresholdFitOptions } = {},
+  ): Promise<{ profiles: OcrThresholdProfile[] }> {
+    return request('/api/ocr/calibration/fit', json('POST', input));
+  },
+  ocrPassAudits(
+    query: { status?: 'all' | 'pending' | 'audited'; period?: string } = {},
+    signal?: AbortSignal,
+  ): Promise<{ audits: OcrPassAudit[]; stats: OcrPassAuditStats; period: string }> {
+    return request(`/api/ocr/pass-audits${toQuery(query)}`, {}, { signal });
+  },
+  sampleOcrPassAudits(input: { fraction?: number; perType?: number; period?: string }): Promise<{
+    period: string;
+    created: OcrPassAudit[];
+    strata: { docType: string; population: number; picked: number }[];
+    stats: OcrPassAuditStats;
+  }> {
+    return request('/api/ocr/pass-audits/sample', json('POST', input));
+  },
+  markOcrPassAudit(
+    id: string,
+    input: { verdict: OcrPassAuditVerdict; note?: string },
+  ): Promise<{ audit: OcrPassAudit; stats: OcrPassAuditStats }> {
+    return request(`/api/ocr/pass-audits/${encodeURIComponent(id)}/verdict`, json('POST', input));
+  },
+  ocrRevisionQc(
+    query: { projectId?: string; limit?: number } = {},
+    signal?: AbortSignal,
+  ): Promise<{ items: OcrRevisionQcItem[]; stats: OcrRevisionQcStats }> {
+    return request(`/api/ocr/revision-qc${toQuery(query)}`, {}, { signal });
+  },
+  reviewOcrRevision(
+    id: string,
+    input: { verdict: OcrRevisionReviewVerdict; value?: string; note?: string },
+  ): Promise<{ item: OcrRevisionQcItem; stats: OcrRevisionQcStats }> {
+    return request(`/api/ocr/revision-qc/${encodeURIComponent(id)}/review`, json('POST', input));
   },
   uploadAvatar(file: File): Promise<{ avatarUrl: string }> {
     const form = new FormData();

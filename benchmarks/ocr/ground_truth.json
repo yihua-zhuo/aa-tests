@@ -1,0 +1,281 @@
+{
+  "complex_table.png": {
+    "conditions": {
+      "mode": "structure"
+    },
+    "degradations": ["complex_table", "empty_cells"],
+    "difficulty": "moderate",
+    "fields": {
+      "amount": "10,392.00",
+      "order": "PO-2026-8841",
+      "product": "WIRELESS HEADSET",
+      "total": "13,322.00",
+      "unit_price": "5,980.00"
+    },
+    "keywords": [
+      "PURCHASE ORDER SUMMARY",
+      "WIRELESS HEADSET",
+      "5,980.00",
+      "10,392.00",
+      "13,322.00",
+      "NET 30"
+    ],
+    "kind": "table",
+    "lang": "en",
+    "provenance": {
+      "annotatedAt": "2026-10-31T00:00:00Z",
+      "annotator": "synthetic-generator",
+      "sha256": "d024a407076f23f3be1d8265263646762e9574c25d5c35b34320c70627f9fdc8",
+      "source": "scripts/generate_ocr_corpus.py"
+    },
+    "tables": [
+      {
+        "rows": [
+          ["PRODUCT", "QTY", "UNIT PRICE", "AMOUNT"],
+          ["WIRELESS HEADSET", "2", "5,980.00", "10,392.00"],
+          ["DOCKING STATION", "1", "2,450.00", "2,450.00"],
+          ["USB-C CABLE", "4", "120.00", "480.00"],
+          ["TOTAL", "", "", "13,322.00"]
+        ]
+      }
+    ],
+    "text": "PRODUCT QTY UNIT PRICE AMOUNT WIRELESS HEADSET 2 5,980.00 10,392.00 DOCKING STATION 1 2,450.00 2,450.00 USB-C CABLE 4 120.00 480.00 TOTAL 13,322.00"
+  },
+  "digital.pdf": {
+    "fields": {
+      "customers": "4,210",
+      "growth": "18.5%",
+      "report": "Quarterly Revenue Report",
+      "total": "1,280,500"
+    },
+    "kind": "text-pdf",
+    "lang": "zh-en",
+    "text": "Quarterly Revenue Report 2026 Q3 本季度总营收为 1,280,500 元，同比增长 18.5%。其中华东地区贡献最大，其次是华南与华北地区。 Top region: East China / 华东地区 Customers: 4,210"
+  },
+  "en.png": {
+    "fields": {
+      "customers": "4,210",
+      "growth": "18.5%",
+      "period": "2026 Q3",
+      "total": "1,280,500"
+    },
+    "kind": "image",
+    "lang": "en",
+    "text": "Quarterly Revenue Report 2026 Q3 Total revenue reached 1,280,500 CNY, up 18.5% year over year. The East China region contributed the largest share, followed by South China and North China. Customer count grew to 4,210."
+  },
+  "fax.png": {
+    "degradations": ["fax", "speckle", "low_resolution"],
+    "difficulty": "severe",
+    "fields": {
+      "customers": "4,210",
+      "growth": "18.5%",
+      "report": "QUARTERLY REVENUE REPORT",
+      "total": "1,280,500"
+    },
+    "keywords": ["FAX TRANSMISSION", "1,280,500", "18.5%", "640,250", "4,210"],
+    "kind": "image-fax",
+    "lang": "en",
+    "provenance": {
+      "annotatedAt": "2026-10-31T00:00:00Z",
+      "annotator": "synthetic-generator",
+      "sha256": "0fce9af39b10a8afae6c8afa3598db914caa9dc3104d92ec314908f0156e65f7",
+      "source": "scripts/generate_ocr_corpus.py"
+    },
+    "text": "FAX TRANSMISSION COVER TO: OPS TEAM FROM: EAST REGION DATE: 2026-10-28 QUARTERLY REVENUE REPORT 2026 Q3 TOTAL REVENUE REACHED 1,280,500 CNY, UP 18.5% YEAR OVER YEAR. EAST CHINA REMAINS THE LARGEST REGION. CUSTOMER COUNT GROWTH WAS 4,210. REGION REVENUE GROWTH EAST 640,250 20.1% SOUTH 384,150 17.2% NORTH 256,100 15.8% THIS FAX IS CONFIDENTIAL. IF RECEIVED IN ERROR PLEASE NOTIFY OPERATIONS IMMEDIATELY."
+  },
+  "ja.png": {
+    "fields": {
+      "growth": "18.5%",
+      "report": "四半期売上レポート"
+    },
+    "kind": "image",
+    "lang": "ja",
+    "text": "四半期売上レポート 今四半期の売上は前年比 18.5% 増加しました。東シナ海地域が最も大きく貢献しています。"
+  },
+  "mixed.png": {
+    "fields": {
+      "customer": "上海 Acme 科技有限公司",
+      "date": "2026-10-28",
+      "invoice": "INV-2026-0042",
+      "status": "Paid",
+      "total": "128,500.00"
+    },
+    "kind": "image",
+    "lang": "zh-en",
+    "text": "客户 Customer: 上海 Acme 科技有限公司 Invoice #INV-2026-0042 Date: 2026-10-28 Total: 128,500.00 CNY Status: Paid"
+  },
+  "multicolumn.png": {
+    "degradations": ["multi_column", "dense_text"],
+    "difficulty": "moderate",
+    "fields": {
+      "customers": "4,210",
+      "growth": "18.5%",
+      "report": "QUARTERLY OPERATIONS REVIEW",
+      "total": "1,280,500"
+    },
+    "keywords": ["QUARTERLY OPERATIONS REVIEW", "1,280,500", "18.5%", "4,210", "920", "40 MS"],
+    "kind": "image-multicolumn",
+    "lang": "en",
+    "provenance": {
+      "annotatedAt": "2026-10-31T00:00:00Z",
+      "annotator": "synthetic-generator",
+      "sha256": "90b6b3df8d7d7302189425e075d277bdfddf568195a4c63bc9612c60a96cba5d",
+      "source": "scripts/generate_ocr_corpus.py"
+    },
+    "text": "QUARTERLY OPERATIONS REVIEW REGION EAST - PERIOD 2026 Q3 TOTAL REVENUE REACHED 1,280,500 CNY, UP 18.5% YEAR OVER YEAR. THE EAST CHINA REGION CONTRIBUTED THE LARGEST SHARE. CUSTOMER COUNT GREW TO 4,210. NEW ORDERS INCREASED TO 920. THE AVERAGE DEAL SIZE WAS 1,392 CNY. P95 PROCESSING LATENCY STAYED AT 40 MS. RETURNS WERE 0.8% OF REVENUE. PREPARED BY FINANCE OPERATIONS"
+  },
+  "photo.jpg": {
+    "conditions": {
+      "mode": "enhanced"
+    },
+    "fields": {
+      "customer": "上海 Acme 科技有限公司",
+      "date": "2026-10-28",
+      "invoice": "INV-2026-0042",
+      "status": "Paid",
+      "total": "128,500.00"
+    },
+    "kind": "image-skewed",
+    "lang": "zh-en",
+    "text": "客户 Customer: 上海 Acme 科技有限公司 Invoice #INV-2026-0042 Date: 2026-10-28 Total: 128,500.00 CNY Status: Paid"
+  },
+  "sample.docx": {
+    "fields": {
+      "defects": "12",
+      "growth": "18.5%",
+      "report": "项目周报",
+      "revenue": "1,280,500"
+    },
+    "keywords": [
+      "项目周报",
+      "Weekly Status",
+      "缺陷修复 12 项",
+      "OCR pipeline integration",
+      "营收增长 18.5%",
+      "1,280,500 元",
+      "4,210"
+    ],
+    "kind": "docx",
+    "lang": "zh-en"
+  },
+  "sample.pptx": {
+    "fields": {
+      "growth": "18.5%",
+      "p95": "P95",
+      "report": "季度回顾",
+      "total": "1,280,500"
+    },
+    "keywords": [
+      "季度回顾",
+      "Quarterly Review",
+      "关键指标",
+      "Key Metrics",
+      "1,280,500",
+      "18.5%",
+      "P95"
+    ],
+    "kind": "pptx",
+    "lang": "zh-en"
+  },
+  "sample.xlsx": {
+    "fields": {
+      "growth": "18.5%",
+      "month": "Month",
+      "revenue": "412300"
+    },
+    "keywords": ["月份", "Month", "收入", "Revenue", "增长率", "412300", "439300", "18.5%"],
+    "kind": "xlsx",
+    "lang": "zh-en"
+  },
+  "scan.tiff": {
+    "fields": {
+      "customers": "4,210",
+      "growth": "18.5%",
+      "total": "1,280,500"
+    },
+    "kind": "image-tiff",
+    "lang": "zh",
+    "text": "季度营收报告 本季度总营收为 1,280,500 元，同比增长 18.5%。其中华东地区贡献最大，其次是华南与华北地区。新增客户 42 家，客户总数达到 4,210 家。"
+  },
+  "scanned.pdf": {
+    "conditions": {
+      "dpi": 300
+    },
+    "fields": {
+      "customers": "4,210",
+      "growth": "18.5%",
+      "report": "Quarterly Revenue Report",
+      "total": "1,280,500"
+    },
+    "keywords": [
+      "季度营收报告",
+      "1,280,500",
+      "18.5%",
+      "Quarterly Revenue Report",
+      "4,210",
+      "East China"
+    ],
+    "kind": "scanned-pdf",
+    "lang": "zh-en"
+  },
+  "skewed_photo.png": {
+    "conditions": {
+      "mode": "enhanced"
+    },
+    "degradations": ["rotation", "perspective", "low_contrast", "noise"],
+    "difficulty": "severe",
+    "fields": {
+      "customer": "SHANGHAI ACME TECHNOLOGY LTD",
+      "date": "2026-10-28",
+      "invoice": "INV-2026-0042",
+      "status": "PAID",
+      "total": "128,500.00"
+    },
+    "keywords": ["SHANGHAI ACME", "INV-2026-0042", "128,500.00", "PAID"],
+    "kind": "image-skewed",
+    "lang": "en",
+    "provenance": {
+      "annotatedAt": "2026-10-31T00:00:00Z",
+      "annotator": "synthetic-generator",
+      "sha256": "b7ecb91161e8bd747997dc79e25e8f299eb188f2a77b5db243bf37698671df63",
+      "source": "scripts/generate_ocr_corpus.py"
+    },
+    "text": "CUSTOMER INVOICE CUSTOMER: SHANGHAI ACME TECHNOLOGY LTD INVOICE #INV-2026-0042 DATE: 2026-10-28 TOTAL: 128,500.00 CNY STATUS: PAID ITEM QTY AMOUNT CONSULTING 12 84,000.00 SUPPORT 1 44,500.00 THANK YOU FOR YOUR BUSINESS. PLEASE KEEP THIS DOCUMENT FOR YOUR RECORDS."
+  },
+  "table.png": {
+    "conditions": {
+      "mode": "structure"
+    },
+    "fields": {
+      "amount": "10,392.00",
+      "product": "无线耳机",
+      "unit_price": "5,980.00"
+    },
+    "keywords": [
+      "产品",
+      "Product",
+      "数量",
+      "Qty",
+      "单价",
+      "Unit Price",
+      "金额",
+      "Amount",
+      "无线耳机",
+      "5,980.00",
+      "10,392.00"
+    ],
+    "kind": "table",
+    "lang": "zh-en"
+  },
+  "zh.png": {
+    "fields": {
+      "customers": "4,210",
+      "growth": "18.5%",
+      "report": "季度营收报告",
+      "total": "1,280,500"
+    },
+    "kind": "image",
+    "lang": "zh",
+    "text": "季度营收报告 本季度总营收为 1,280,500 元，同比增长 18.5%。其中华东地区贡献最大，其次是华南与华北地区。新增客户 42 家，客户总数达到 4,210 家。"
+  }
+}

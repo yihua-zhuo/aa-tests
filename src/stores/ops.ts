@@ -35,8 +35,17 @@ function defaultSettings(demoDataEnabled: boolean): StoredSettings {
     trashRetentionDays: positiveIntEnv('TRASH_RETENTION_DAYS', 30),
     auditRetentionDays: positiveIntEnv('AUDIT_RETENTION_DAYS', 180),
     activityRetentionDays: positiveIntEnv('ACTIVITY_RETENTION_DAYS', 180),
+    ocrRetentionDays: nonNegativeIntEnv('OCR_RETENTION_DAYS', 0),
     demoDataEnabled,
   };
+}
+
+/** Unlike the other retention windows, 0 is meaningful here: keep forever. */
+function nonNegativeIntEnv(name: string, fallback: number): number {
+  const raw = process.env[name]?.trim();
+  if (!raw) return fallback;
+  const parsed = Number(raw);
+  return Number.isInteger(parsed) && parsed >= 0 ? parsed : fallback;
 }
 
 export type EraseUserResult = 'ok' | 'not_found' | 'last_admin';
@@ -77,11 +86,16 @@ export class OpsStore {
       const parsedValue = Number(value);
       return Number.isInteger(parsedValue) && parsedValue > 0 ? parsedValue : fallback;
     };
+    const daysAllowZero = (value: unknown, fallback: number): number => {
+      const parsedValue = Number(value);
+      return Number.isInteger(parsedValue) && parsedValue >= 0 ? parsedValue : fallback;
+    };
     return {
       backupRetentionDays: days(parsed.backupRetentionDays, defaults.backupRetentionDays),
       trashRetentionDays: days(parsed.trashRetentionDays, defaults.trashRetentionDays),
       auditRetentionDays: days(parsed.auditRetentionDays, defaults.auditRetentionDays),
       activityRetentionDays: days(parsed.activityRetentionDays, defaults.activityRetentionDays),
+      ocrRetentionDays: daysAllowZero(parsed.ocrRetentionDays, defaults.ocrRetentionDays),
       demoDataEnabled:
         typeof parsed.demoDataEnabled === 'boolean'
           ? parsed.demoDataEnabled
@@ -97,6 +111,7 @@ export class OpsStore {
       trashRetentionDays: patch.trashRetentionDays ?? current.trashRetentionDays,
       auditRetentionDays: patch.auditRetentionDays ?? current.auditRetentionDays,
       activityRetentionDays: patch.activityRetentionDays ?? current.activityRetentionDays,
+      ocrRetentionDays: patch.ocrRetentionDays ?? current.ocrRetentionDays,
       demoDataEnabled: patch.demoDataEnabled ?? current.demoDataEnabled,
     };
     const now = new Date().toISOString();
@@ -114,6 +129,7 @@ export class OpsStore {
     trashRetentionDays: number;
     auditRetentionDays: number;
     activityRetentionDays: number;
+    ocrRetentionDays: number;
   } {
     const { demoDataEnabled: _demo, updatedAt: _updatedAt, ...retention } = this.settings();
     return retention;
